@@ -18,12 +18,22 @@ import { TasksModule } from './tasks/tasks.module';
     ScheduleModule.forRoot(),
     BullModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        redis: {
-          host: configService.get<string>('REDIS_HOST', 'localhost'),
-          port: configService.get<number>('REDIS_PORT', 6379),
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const redisUrl = configService.get<string>('REDIS_URL');
+        
+        if (redisUrl) {
+          return {
+            redis: redisUrl,
+          };
+        }
+        
+        return {
+          redis: {
+            host: configService.get<string>('REDIS_HOST', 'localhost'),
+            port: configService.get<number>('REDIS_PORT', 6379),
+          },
+        };
+      },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
