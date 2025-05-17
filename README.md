@@ -4,17 +4,20 @@ A RESTful API service built with NestJS that provides weather data and forecasts
 
 ## Features
 
-- Weather data retrieval from external services
-- Scheduled weather updates
-- Email notifications for weather alerts
-- Background job processing with Bull
-- Data persistence with Prisma
+- Weather data retrieval by city
+- Subscribing to weather updates
+- Support for multiple response formats (HTML and JSON)
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
+### Option 1: Docker Setup (Recommended)
+- Docker and Docker Compose
+
+### Option 2: Local Setup
+- Node.js
 - Yarn package manager
-- PostgreSQL database (or compatible database supported by Prisma)
+- PostgreSQL database
+- Redis
 
 ## Project setup
 
@@ -66,17 +69,21 @@ $ docker-compose up -d
 
 This will start the API and a PostgreSQL database in containerized environments.
 
+## API Documentation
+
+The API provides the following endpoints:
+
+- `GET /api/weather?city={city}` - Get current weather for a given city with `Temperature`, `Humidity` and `Weather description`
+- `POST /api/subscribe` - Subscribe a given `email` to weather updates for a given `city` with a given frequency (`daily` or `hourly`)
+- `GET /api/confirm/{token}` - Confirm email subscription (send a link to this endpoint on the confirmation email)
+- `GET /api/unsubscribe/{token}` - Unsubscribe from weather updates (send a link to this endpoint in each weather update)
+
+
 ## Running tests
 
 ```bash
 # unit tests
 $ yarn test
-
-# specific test file
-$ yarn test path/to/specific.spec.ts
-
-# specific test case
-$ yarn test -t "test description"
 
 # e2e tests
 $ yarn test:e2e
