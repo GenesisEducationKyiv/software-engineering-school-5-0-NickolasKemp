@@ -19,8 +19,6 @@ export class WeatherService {
       const apiKey = this.configService.get<string>('WEATHER_API_KEY');
       const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`;
       
-      console.log(url);
-
       const response = await axios.get(url);
       
       return {
@@ -29,7 +27,6 @@ export class WeatherService {
         description: response.data.current.condition.text,
       };
     } catch (error) {
-        console.error(error);
       this.logger.error(`Failed to fetch weather data for city: ${city}`, error.stack);
       throw error;
     }
