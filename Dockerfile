@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Install yarn globally using npm
+RUN npm install -g yarn
+
 WORKDIR /app
 
 # Copy package files
