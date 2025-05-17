@@ -85,23 +85,3 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
-## API Documentation
-
-Once the application is running, you can access the API documentation at:
-http://localhost:3000/api
-
-## Project Structure
-
-```
-src/
-├── config/            # Configuration modules
-├── weather/           # Weather module with controllers and services
-├── notifications/     # Email notification services
-├── jobs/              # Background job processors
-├── prisma/            # Prisma schema and migrations
-└── main.ts            # Application entry point
-```
-
-## License
-
-This project is [MIT licensed](LICENSE).
