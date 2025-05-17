@@ -4,6 +4,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import * as uuid from 'uuid';
+
+jest.mock('uuid', () => ({
+  v4: jest.fn()
+    .mockReturnValueOnce('confirmation-token-1')
+    .mockReturnValueOnce('unsubscribe-token-1')
+    .mockReturnValueOnce('confirmation-token-2')
+    .mockReturnValueOnce('unsubscribe-token-2'),
+}));
 
 describe('SubscriptionService', () => {
   let service: SubscriptionService;

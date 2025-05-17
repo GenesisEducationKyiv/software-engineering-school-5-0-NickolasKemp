@@ -51,6 +51,7 @@ describe('EmailService', () => {
     expect(nodemailer.createTransport).toHaveBeenCalledWith({
       host: 'smtp.example.com',
       port: 587,
+      secure: false,
       auth: {
         user: 'test-user',
         pass: 'test-pass',
@@ -74,6 +75,18 @@ describe('EmailService', () => {
           html: expect.stringContaining(token),
         })
       );
+    });
+    
+    it('should propagate errors from the mail transport', async () => {
+      const email = 'test@example.com';
+      const token = 'test-token';
+      const appUrl = 'http://localhost:3000';
+      
+      mockSendMail.mockRejectedValueOnce(new Error('SMTP error'));
+
+      await expect(
+        emailService.sendConfirmationEmail(email, token, appUrl)
+      ).rejects.toThrow('SMTP error');
     });
   });
 

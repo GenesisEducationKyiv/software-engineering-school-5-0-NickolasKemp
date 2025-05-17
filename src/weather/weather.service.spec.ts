@@ -17,7 +17,10 @@ describe('WeatherService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn(() => 'test-api-key'),
+            get: jest.fn((key) => {
+              if (key === 'WEATHER_API_KEY') return 'test-api-key';
+              return null;
+            }),
           },
         },
       ],
@@ -32,6 +35,27 @@ describe('WeatherService', () => {
   });
 
   describe('getWeather', () => {
+    it('should call weather API with correct parameters', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          current: {
+            temp_c: 22,
+            humidity: 75,
+            condition: {
+              text: 'Partly cloudy',
+            },
+          },
+        },
+      });
+
+      const city = 'London';
+      await weatherService.getWeather(city);
+
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        `http://api.weatherapi.com/v1/current.json?key=test-api-key&q=${city}`,
+      );
+    });
+
     it('should return weather data for a valid city', async () => {
       const city = 'London';
       const mockResponse = {
