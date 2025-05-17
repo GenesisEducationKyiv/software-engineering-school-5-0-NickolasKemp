@@ -17,6 +17,7 @@ export class EmailService {
       this.transporter = nodemailer.createTransport({
         host: this.configService.get<string>('SMTP_HOST'),
         port: this.configService.get<number>('SMTP_PORT'),
+        secure: false,
         auth: {
           user: this.configService.get<string>('SMTP_USER'),
           pass: this.configService.get<string>('SMTP_PASS'),
@@ -52,6 +53,7 @@ export class EmailService {
       
       this.logger.log(`Confirmation email sent to ${email}`);
     } catch (error) {
+      console.error(error);
       this.logger.error(`Failed to send confirmation email to ${email}`, error.stack);
       throw error;
     }

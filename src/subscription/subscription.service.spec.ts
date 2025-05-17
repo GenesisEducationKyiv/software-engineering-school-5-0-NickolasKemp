@@ -62,7 +62,6 @@ describe('SubscriptionService', () => {
 
   describe('subscribe', () => {
     it('should create a new subscription and send confirmation email', async () => {
-      // Arrange
       const email = 'test@example.com';
       const city = 'London';
       const frequency = 'daily';
