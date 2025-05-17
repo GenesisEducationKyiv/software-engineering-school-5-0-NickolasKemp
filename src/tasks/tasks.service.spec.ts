@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TasksService } from '../src/tasks/tasks.service';
-import { PrismaService } from '../src/prisma/prisma.service';
-import { WeatherService } from '../src/weather/weather.service';
-import { EmailService } from '../src/email/email.service';
+import { TasksService } from './tasks.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { WeatherService } from '../weather/weather.service';
+import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { getQueueToken } from '@nestjs/bull';
 

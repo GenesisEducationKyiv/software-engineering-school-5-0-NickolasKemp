@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { WeatherUpdatesProcessor } from '../src/tasks/weather-updates.processor';
-import { WeatherService } from '../src/weather/weather.service';
-import { EmailService } from '../src/email/email.service';
+import { WeatherUpdatesProcessor } from './weather-updates.processor';
+import { WeatherService } from '../weather/weather.service';
+import { EmailService } from '../email/email.service';
 
 describe('WeatherUpdatesProcessor', () => {
   let processor: WeatherUpdatesProcessor;
