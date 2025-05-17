@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -22,4 +22,4 @@ RUN yarn build
 EXPOSE 3000
 
 # Start the application with migrations
-CMD ["sh", "-c", "npx prisma migrate deploy && yarn start:prod"] 
+CMD ["sh", "-c", "npx prisma migrate deploy && yarn start:dev"] 
