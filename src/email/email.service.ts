@@ -42,7 +42,7 @@ export class EmailService {
             <h2>Weather Subscription Confirmation</h2>
             <p>Thank you for subscribing to our weather updates service!</p>
             <p>Please click the button below to confirm your subscription:</p>
-            <a href="${confirmUrl}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">
+            <a href="${confirmUrl}" style="display: inline-block; background-color:rgb(37, 99, 235); color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 20px 0;">
               Confirm Subscription
             </a>
             <p>If the button doesn't work, copy and paste this URL into your browser:</p>
