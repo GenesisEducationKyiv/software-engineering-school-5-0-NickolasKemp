@@ -27,7 +27,7 @@ export class TasksService {
         email: sub.email,
         city: sub.city,
         token: sub.unsubscribeToken,
-        appUrl: this.configService.get<string>('APP_URL'),
+        appUrl: this.configService.get<string>('APP_URL') || 'http://localhost:3000',
       });
     }
   }
@@ -44,7 +44,7 @@ export class TasksService {
         email: sub.email,
         city: sub.city,
         token: sub.unsubscribeToken,
-        appUrl: this.configService.get<string>('APP_URL'),
+        appUrl: this.configService.get<string>('APP_URL') || 'http://localhost:3000',
       });
     }
   }
