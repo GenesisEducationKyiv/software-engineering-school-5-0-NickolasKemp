@@ -18,18 +18,6 @@ A RESTful API service built with NestJS that provides weather data and forecasts
 - PostgreSQL database
 - Redis
 
-## Project setup
-
-```bash
-# Install dependencies
-$ yarn install
-
-# Generate Prisma client
-$ npx prisma generate
-
-# Setup database (first time only)
-$ npx prisma migrate dev
-```
 
 ## Environment Configuration
 
@@ -48,17 +36,20 @@ REDIS_HOST="localhost"
 REDIS_PORT="6379"
 ```
 
-## Running the app
+## Running locally
 
 ```bash
+# Install dependencies
+$ yarn install
+
+# Generate Prisma client
+$ npx prisma generate
+
+# Setup database (first time only)
+$ npx prisma migrate dev
+
 # development
 $ yarn start
-
-# watch mode
-$ yarn start:dev
-
-# production mode
-$ yarn start:prod
 ```
 
 ## Docker
