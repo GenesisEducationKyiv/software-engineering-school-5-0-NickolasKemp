@@ -22,4 +22,4 @@ RUN yarn build
 EXPOSE 3000
 
 # Start the application with migrations
-CMD ["sh", "-c", "npx prisma migrate deploy && yarn start:dev"] 
+CMD ["sh", "-c", "npx prisma migrate deploy && yarn start"] 
