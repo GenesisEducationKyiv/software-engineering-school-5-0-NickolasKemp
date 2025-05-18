@@ -3,8 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
-import { Prisma } from '@prisma/client';
-
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { WeatherService } from '../weather/weather.service';
 @Injectable()
 export class SubscriptionService {
   private readonly logger = new Logger(SubscriptionService.name);
@@ -13,6 +13,7 @@ export class SubscriptionService {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly configService: ConfigService,
+    private readonly weatherService: WeatherService,
   ) {}
 
   async subscribe(email: string, city: string, frequency: 'hourly' | 'daily'): Promise<void> {
@@ -22,6 +23,12 @@ export class SubscriptionService {
     
     if (existing) {
       throw new ConflictException('Email already subscribed');
+    }
+
+    try {
+      await this.weatherService.getWeather(city);
+    } catch (error) {
+      throw new NotFoundException('City not found');
     }
     
     const confirmationToken = uuidv4();
@@ -54,7 +61,7 @@ export class SubscriptionService {
       
       this.logger.log(`Subscription created for ${email} with city ${city} and frequency ${frequency}`);
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ConflictException('Email already subscribed');
         }

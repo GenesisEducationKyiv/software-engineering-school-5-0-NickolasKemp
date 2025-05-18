@@ -5,6 +5,7 @@ import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import * as uuid from 'uuid';
+import { WeatherService } from '../weather/weather.service';
 
 jest.mock('uuid', () => ({
   v4: jest.fn()
@@ -19,6 +20,7 @@ describe('SubscriptionService', () => {
   let prismaService: PrismaService;
   let emailService: EmailService;
   let configService: ConfigService;
+  let weatherService: WeatherService;
 
   const mockPrismaService = {
     subscription: {
@@ -36,6 +38,14 @@ describe('SubscriptionService', () => {
 
   const mockConfigService = {
     get: jest.fn().mockReturnValue('http://localhost:3000'),
+  };
+
+  const mockWeatherService = {
+    getWeather: jest.fn().mockResolvedValue({
+      temperature: 21,
+      humidity: 65,
+      description: 'Sunny',
+    }),
   };
 
   beforeEach(async () => {
@@ -56,6 +66,10 @@ describe('SubscriptionService', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: WeatherService,
+          useValue: mockWeatherService,
+        },
       ],
     }).compile();
 
@@ -63,6 +77,7 @@ describe('SubscriptionService', () => {
     prismaService = module.get<PrismaService>(PrismaService);
     emailService = module.get<EmailService>(EmailService);
     configService = module.get<ConfigService>(ConfigService);
+    weatherService = module.get<WeatherService>(WeatherService);
   });
 
   it('should be defined', () => {
@@ -93,6 +108,7 @@ describe('SubscriptionService', () => {
       expect(mockPrismaService.subscription.findUnique).toHaveBeenCalledWith({
         where: { email },
       });
+      expect(mockWeatherService.getWeather).toHaveBeenCalledWith(city);
       expect(mockPrismaService.subscription.create).toHaveBeenCalled();
       expect(mockEmailService.sendConfirmationEmail).toHaveBeenCalled();
     });
@@ -107,6 +123,19 @@ describe('SubscriptionService', () => {
       
       await expect(service.subscribe(email, 'London', 'daily')).rejects.toThrow(
         ConflictException,
+      );
+      expect(mockPrismaService.subscription.create).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if city not found', async () => {
+      const email = 'test@example.com';
+      const city = 'NonExistentCity';
+      
+      mockPrismaService.subscription.findUnique.mockResolvedValue(null);
+      mockWeatherService.getWeather.mockRejectedValue(new Error('City not found'));
+      
+      await expect(service.subscribe(email, city, 'daily')).rejects.toThrow(
+        NotFoundException,
       );
       expect(mockPrismaService.subscription.create).not.toHaveBeenCalled();
     });

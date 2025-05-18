@@ -3,6 +3,10 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { SubscriptionController } from './subscription.controller';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
+import { ConfigService } from '@nestjs/config';
+import { WeatherService } from '../weather/weather.service';
 
 describe('SubscriptionController', () => {
   let controller: SubscriptionController;
@@ -18,6 +22,24 @@ describe('SubscriptionController', () => {
             subscribe: jest.fn(),
             confirm: jest.fn(),
             unsubscribe: jest.fn(),
+          },
+        },
+        {
+          provide: PrismaService,
+          useValue: {},
+        },
+        {
+          provide: EmailService,
+          useValue: {},
+        },
+        {
+          provide: ConfigService,
+          useValue: {},
+        },
+        {
+          provide: WeatherService,
+          useValue: {
+            getWeather: jest.fn(),
           },
         },
       ],
