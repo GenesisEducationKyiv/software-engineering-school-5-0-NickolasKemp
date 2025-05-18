@@ -6,7 +6,6 @@ A RESTful API service built with NestJS that provides weather data and forecasts
 
 - Weather data retrieval by city
 - Subscribing to weather updates
-- Support for multiple response formats (HTML and JSON)
 
 ## Prerequisites
 
@@ -37,12 +36,16 @@ $ npx prisma migrate dev
 Create a `.env` file in the root directory with the following variables:
 
 ```
-DATABASE_URL="postgresql://user:password@localhost:5432/weather-api"
-WEATHER_API_KEY="your_weather_api_key"
-EMAIL_HOST="smtp.example.com"
-EMAIL_USER="your_email@example.com"
-EMAIL_PASSWORD="your_email_password"
-PORT=3000
+WEATHER_API_KEY="your_weather_api_key" # https://www.weatherapi.com/
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_USER="your_email_for_weather_forecast_mailing"
+SMTP_PASS="your_google_account_app_pass" # https://myaccount.google.com/apppasswords
+
+# if you picked the local setup, make sure to spin up these services 
+DATABASE_URL="postgresql://user:password@postgres:5432/weather_service?schema=public" 
+REDIS_HOST="localhost" 
+REDIS_PORT="6379"
 ```
 
 ## Running the app
@@ -69,10 +72,11 @@ $ docker-compose up -d
 
 This will start the API and a PostgreSQL database in containerized environments.
 
-## API Documentation
+## API
 
 The API provides the following endpoints:
 
+- `GET /` - Returns an HTML page for weather subscription
 - `GET /api/weather?city={city}` - Get current weather for a given city with `Temperature`, `Humidity` and `Weather description`
 - `POST /api/subscribe` - Subscribe a given `email` to weather updates for a given `city` with a given frequency (`daily` or `hourly`)
 - `GET /api/confirm/{token}` - Confirm email subscription (send a link to this endpoint on the confirmation email)
@@ -87,6 +91,5 @@ $ yarn test
 
 # e2e tests
 $ yarn test:e2e
-
 ```
 
