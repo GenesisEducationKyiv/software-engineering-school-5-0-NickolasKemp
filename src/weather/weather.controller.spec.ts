@@ -52,18 +52,14 @@ describe('WeatherController', () => {
     });
 
     it('should throw BadRequestException if city is not provided', async () => {
-      await expect(weatherController.getWeather('' as any)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(weatherController.getWeather('')).rejects.toThrow(BadRequestException);
     });
 
     it('should throw NotFoundException if weather service throws an error', async () => {
       const city = 'InvalidCity';
       jest.spyOn(weatherService, 'getWeather').mockRejectedValue(new Error('API Error'));
 
-      await expect(weatherController.getWeather(city)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(weatherController.getWeather(city)).rejects.toThrow(NotFoundException);
     });
   });
 });

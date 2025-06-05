@@ -5,8 +5,6 @@ import { EmailService } from '../email/email.service';
 
 describe('WeatherUpdatesProcessor', () => {
   let processor: WeatherUpdatesProcessor;
-  let weatherService: WeatherService;
-  let emailService: EmailService;
 
   const mockWeatherService = {
     getWeather: jest.fn(),
@@ -18,7 +16,7 @@ describe('WeatherUpdatesProcessor', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         WeatherUpdatesProcessor,
@@ -34,8 +32,6 @@ describe('WeatherUpdatesProcessor', () => {
     }).compile();
 
     processor = module.get<WeatherUpdatesProcessor>(WeatherUpdatesProcessor);
-    weatherService = module.get<WeatherService>(WeatherService);
-    emailService = module.get<EmailService>(EmailService);
   });
 
   it('should be defined', () => {
@@ -89,10 +85,11 @@ describe('WeatherUpdatesProcessor', () => {
 
       mockWeatherService.getWeather.mockRejectedValue(new Error('City not found'));
 
-      await expect(processor.processWeatherUpdate(mockJob as any))
-        .rejects.toThrow('City not found');
-      
+      await expect(processor.processWeatherUpdate(mockJob as any)).rejects.toThrow(
+        'City not found',
+      );
+
       expect(mockEmailService.sendWeatherUpdate).not.toHaveBeenCalled();
     });
   });
-}); 
+});

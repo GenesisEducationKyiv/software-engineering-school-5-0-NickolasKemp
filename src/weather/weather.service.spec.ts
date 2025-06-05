@@ -8,7 +8,6 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('WeatherService', () => {
   let weatherService: WeatherService;
-  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,7 +26,6 @@ describe('WeatherService', () => {
     }).compile();
 
     weatherService = module.get<WeatherService>(WeatherService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -73,9 +71,7 @@ describe('WeatherService', () => {
 
       const result = await weatherService.getWeather(city);
 
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        expect.stringContaining(`q=${city}`),
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith(expect.stringContaining(`q=${city}`));
       expect(result).toEqual({
         temperature: 20,
         humidity: 65,

@@ -7,7 +7,15 @@ export interface WeatherData {
   humidity: number;
   description: string;
 }
-
+interface WeatherApiResponse {
+  current: {
+    temp_c: number;
+    humidity: number;
+    condition: {
+      text: string;
+    };
+  };
+}
 @Injectable()
 export class WeatherService {
   private readonly logger = new Logger(WeatherService.name);
@@ -18,9 +26,9 @@ export class WeatherService {
     try {
       const apiKey = this.configService.get<string>('WEATHER_API_KEY');
       const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`;
-      
-      const response = await axios.get(url);
-      
+
+      const response = await axios.get<WeatherApiResponse>(url);
+
       return {
         temperature: response.data.current.temp_c,
         humidity: response.data.current.humidity,
