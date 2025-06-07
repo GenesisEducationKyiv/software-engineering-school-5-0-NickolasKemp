@@ -8,8 +8,6 @@ import { getQueueToken } from '@nestjs/bull';
 
 describe('TasksService', () => {
   let service: TasksService;
-  let prismaService: PrismaService;
-  let weatherQueue: any;
 
   const mockPrismaService = {
     subscription: {
@@ -29,7 +27,7 @@ describe('TasksService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TasksService,
@@ -57,8 +55,6 @@ describe('TasksService', () => {
     }).compile();
 
     service = module.get<TasksService>(TasksService);
-    prismaService = module.get<PrismaService>(PrismaService);
-    weatherQueue = module.get(getQueueToken('weather-updates'));
   });
 
   it('should be defined', () => {
@@ -151,4 +147,4 @@ describe('TasksService', () => {
       });
     });
   });
-}); 
+});

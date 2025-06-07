@@ -3,11 +3,11 @@ import { WeatherData } from '../../src/weather/weather.service';
 
 @Injectable()
 export class MockWeatherService {
-  async getWeather(city: string): Promise<WeatherData> {
-    return {
+  getWeather(): Promise<WeatherData> {
+    return Promise.resolve({
       temperature: 21,
       humidity: 65,
       description: 'Sunny',
-    };
+    });
   }
-} 
+}

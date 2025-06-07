@@ -24,7 +24,7 @@ export class WeatherUpdatesProcessor {
   async processWeatherUpdate(job: Job<WeatherUpdateJob>): Promise<void> {
     const { email, city, token, appUrl } = job.data;
     this.logger.log(`Processing weather update for ${email}, city: ${city}`);
-    
+
     try {
       const weather = await this.weatherService.getWeather(city);
       await this.emailService.sendWeatherUpdate(email, city, weather, token, appUrl);
@@ -37,4 +37,4 @@ export class WeatherUpdatesProcessor {
       throw error;
     }
   }
-} 
+}

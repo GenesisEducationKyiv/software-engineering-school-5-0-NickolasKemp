@@ -1,10 +1,17 @@
-import { Controller, Get, Query, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  BadRequestException,
+  NotFoundException,
+  Logger,
+} from '@nestjs/common';
 import { WeatherService, WeatherData } from './weather.service';
 
 @Controller('api/weather')
 export class WeatherController {
   private readonly logger = new Logger(WeatherController.name);
-  
+
   constructor(private readonly weatherService: WeatherService) {}
 
   @Get()
@@ -12,7 +19,7 @@ export class WeatherController {
     if (!city) {
       throw new BadRequestException('City is required');
     }
-    
+
     try {
       return await this.weatherService.getWeather(city);
     } catch (error) {

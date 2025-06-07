@@ -8,7 +8,6 @@ jest.mock('nodemailer');
 
 describe('EmailService', () => {
   let emailService: EmailService;
-  let configService: ConfigService;
   const mockSendMail = jest.fn().mockImplementation(() => Promise.resolve());
   const mockCreateTransport = jest.fn().mockImplementation(() => ({
     sendMail: mockSendMail,
@@ -16,7 +15,7 @@ describe('EmailService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     (nodemailer.createTransport as jest.Mock) = mockCreateTransport;
 
     const module: TestingModule = await Test.createTestingModule({
@@ -25,12 +24,12 @@ describe('EmailService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn((key) => {
-              const config = {
-                'SMTP_HOST': 'smtp.example.com',
-                'SMTP_PORT': 587,
-                'SMTP_USER': 'test-user',
-                'SMTP_PASS': 'test-pass',
+            get: jest.fn((key: string) => {
+              const config: Record<string, string | number> = {
+                SMTP_HOST: 'smtp.example.com',
+                SMTP_PORT: 587,
+                SMTP_USER: 'test-user',
+                SMTP_PASS: 'test-pass',
               };
               return config[key];
             }),
@@ -40,7 +39,6 @@ describe('EmailService', () => {
     }).compile();
 
     emailService = module.get<EmailService>(EmailService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   it('should be defined', () => {
@@ -61,9 +59,9 @@ describe('EmailService', () => {
 
   describe('sendConfirmationEmail', () => {
     it('should send a confirmation email with correct parameters', async () => {
-      const email = 'test@example.com';
-      const token = 'test-token';
-      const appUrl = 'http://localhost:3000';
+      const email: string = 'test@example.com';
+      const token: string = 'test-token';
+      const appUrl: string = 'http://localhost:3000';
 
       await emailService.sendConfirmationEmail(email, token, appUrl);
 
@@ -71,22 +69,22 @@ describe('EmailService', () => {
         expect.objectContaining({
           to: email,
           subject: 'Confirm Your Weather Subscription',
-          text: expect.stringContaining(token),
-          html: expect.stringContaining(token),
-        })
+          text: expect.stringContaining(token) as string,
+          html: expect.stringContaining(token) as string,
+        }),
       );
     });
-    
+
     it('should propagate errors from the mail transport', async () => {
       const email = 'test@example.com';
       const token = 'test-token';
       const appUrl = 'http://localhost:3000';
-      
+
       mockSendMail.mockRejectedValueOnce(new Error('SMTP error'));
 
-      await expect(
-        emailService.sendConfirmationEmail(email, token, appUrl)
-      ).rejects.toThrow('SMTP error');
+      await expect(emailService.sendConfirmationEmail(email, token, appUrl)).rejects.toThrow(
+        'SMTP error',
+      );
     });
   });
 
@@ -108,9 +106,9 @@ describe('EmailService', () => {
         expect.objectContaining({
           to: email,
           subject: `Weather Update for ${city}`,
-          text: expect.stringContaining('Temperature: 20°C'),
-          html: expect.stringContaining('Temperature:</strong> 20°C'),
-        })
+          text: expect.stringContaining('Temperature: 20°C') as string,
+          html: expect.stringContaining('Temperature:</strong> 20°C') as string,
+        }),
       );
     });
   });

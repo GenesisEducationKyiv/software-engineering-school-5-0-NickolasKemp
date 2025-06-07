@@ -32,7 +32,7 @@ export class EmailService {
   async sendConfirmationEmail(email: string, token: string, appUrl: string): Promise<void> {
     try {
       const confirmUrl = `${appUrl}/api/confirm/${token}`;
-      
+
       await this.transporter.sendMail({
         to: email,
         subject: 'Confirm Your Weather Subscription',
@@ -50,7 +50,7 @@ export class EmailService {
           </div>
         `,
       });
-      
+
       this.logger.log(`Confirmation email sent to ${email}`);
     } catch (error) {
       console.error(error);
@@ -60,15 +60,15 @@ export class EmailService {
   }
 
   async sendWeatherUpdate(
-    email: string, 
-    city: string, 
-    weather: WeatherData, 
-    unsubscribeToken: string, 
-    appUrl: string
+    email: string,
+    city: string,
+    weather: WeatherData,
+    unsubscribeToken: string,
+    appUrl: string,
   ): Promise<void> {
     try {
       const unsubscribeUrl = `${appUrl}/api/unsubscribe/${unsubscribeToken}`;
-      
+
       await this.transporter.sendMail({
         to: email,
         subject: `Weather Update for ${city}`,
@@ -95,7 +95,7 @@ export class EmailService {
           </div>
         `,
       });
-      
+
       this.logger.log(`Weather update sent to ${email} for ${city}`);
     } catch (error) {
       this.logger.error(`Failed to send weather update to ${email} for ${city}`, error.stack);
