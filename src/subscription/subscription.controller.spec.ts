@@ -62,9 +62,11 @@ describe('SubscriptionController', () => {
       };
       const expectedResponse = { message: 'Subscription successful. Confirmation email sent.' };
 
+      (service.subscribe as jest.Mock).mockResolvedValue(expectedResponse);
+
       const result = await controller.subscribe(dto);
 
-      expect(service.subscribe).toHaveBeenCalledWith(dto.email, dto.city, dto.frequency);
+      expect(service.subscribe as jest.Mock).toHaveBeenCalledWith(dto);
       expect(result).toEqual(expectedResponse);
     });
   });
@@ -76,13 +78,13 @@ describe('SubscriptionController', () => {
 
       const result = await controller.confirm(token);
 
-      expect(service.confirm).toHaveBeenCalledWith(token);
+      expect(service.confirm as jest.Mock).toHaveBeenCalledWith(token);
       expect(result).toEqual(expectedResponse);
     });
 
     it('should throw BadRequestException if token is not provided', async () => {
       await expect(controller.confirm('')).rejects.toThrow(BadRequestException);
-      expect(service.confirm).not.toHaveBeenCalled();
+      expect(service.confirm as jest.Mock).not.toHaveBeenCalled();
     });
   });
 
@@ -93,13 +95,13 @@ describe('SubscriptionController', () => {
 
       const result = await controller.unsubscribe(token);
 
-      expect(service.unsubscribe).toHaveBeenCalledWith(token);
+      expect(service.unsubscribe as jest.Mock).toHaveBeenCalledWith(token);
       expect(result).toEqual(expectedResponse);
     });
 
     it('should throw BadRequestException if token is not provided', async () => {
       await expect(controller.unsubscribe('')).rejects.toThrow(BadRequestException);
-      expect(service.unsubscribe).not.toHaveBeenCalled();
+      expect(service.unsubscribe as jest.Mock).not.toHaveBeenCalled();
     });
   });
 });

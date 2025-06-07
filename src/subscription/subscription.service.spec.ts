@@ -94,7 +94,7 @@ describe('SubscriptionService', () => {
         updatedAt: new Date(),
       });
 
-      await service.subscribe(email, city, frequency);
+      await service.subscribe({ email, city, frequency });
 
       expect(mockPrismaService.subscription.findUnique).toHaveBeenCalledWith({
         where: { email },
@@ -112,7 +112,9 @@ describe('SubscriptionService', () => {
         email,
       });
 
-      await expect(service.subscribe(email, 'London', 'daily')).rejects.toThrow(ConflictException);
+      await expect(
+        service.subscribe({ email, city: 'London', frequency: 'daily' }),
+      ).rejects.toThrow(ConflictException);
       expect(mockPrismaService.subscription.create).not.toHaveBeenCalled();
     });
 
@@ -123,7 +125,9 @@ describe('SubscriptionService', () => {
       mockPrismaService.subscription.findUnique.mockResolvedValue(null);
       mockWeatherService.getWeather.mockRejectedValue(new Error('City not found'));
 
-      await expect(service.subscribe(email, city, 'daily')).rejects.toThrow(NotFoundException);
+      await expect(service.subscribe({ email, city, frequency: 'daily' })).rejects.toThrow(
+        NotFoundException,
+      );
       expect(mockPrismaService.subscription.create).not.toHaveBeenCalled();
     });
   });

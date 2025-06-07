@@ -21,11 +21,7 @@ export class SubscriptionController {
   @Post('subscribe')
   @HttpCode(HttpStatus.OK)
   async subscribe(@Body() createSubscriptionDto: CreateSubscriptionDto) {
-    await this.subscriptionService.subscribe(
-      createSubscriptionDto.email,
-      createSubscriptionDto.city,
-      createSubscriptionDto.frequency,
-    );
+    await this.subscriptionService.subscribe(createSubscriptionDto);
 
     return { message: 'Subscription successful. Confirmation email sent.' };
   }

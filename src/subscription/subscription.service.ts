@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { WeatherService } from '../weather/weather.service';
+import { CreateSubscriptionDto } from 'src/subscription/dto/create-subscription.dto';
 @Injectable()
 export class SubscriptionService {
   private readonly logger = new Logger(SubscriptionService.name);
@@ -16,7 +17,9 @@ export class SubscriptionService {
     private readonly weatherService: WeatherService,
   ) {}
 
-  async subscribe(email: string, city: string, frequency: 'hourly' | 'daily'): Promise<void> {
+  async subscribe(createSubscriptionDto: CreateSubscriptionDto): Promise<void> {
+    const { email, city, frequency } = createSubscriptionDto;
+
     const existing = await this.prisma.subscription.findUnique({
       where: { email },
     });

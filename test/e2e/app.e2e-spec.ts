@@ -131,10 +131,10 @@ describe('API Endpoints (e2e)', () => {
       });
 
       expect(subscription).toBeDefined();
-      expect(subscription.email).toBe(TEST_EMAIL);
-      expect(subscription.city).toBe(TEST_CITY);
-      expect(subscription.frequency).toBe('daily');
-      expect(subscription.confirmed).toBe(false);
+      expect(subscription?.email).toBe(TEST_EMAIL);
+      expect(subscription?.city).toBe(TEST_CITY);
+      expect(subscription?.frequency).toBe('daily');
+      expect(subscription?.confirmed).toBe(false);
     });
 
     it('should handle duplicate subscription', async () => {
@@ -145,6 +145,7 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmationToken: TEST_CONFIRM_TOKEN,
           unsubscribeToken: TEST_UNSUB_TOKEN,
+          confirmed: false,
         },
       });
 
@@ -161,8 +162,8 @@ describe('API Endpoints (e2e)', () => {
         where: { email: TEST_EMAIL },
       });
 
-      expect(subscription.city).toBe(TEST_CITY);
-      expect(subscription.frequency).toBe('daily');
+      expect(subscription?.city).toBe(TEST_CITY);
+      expect(subscription?.frequency).toBe('daily');
     });
 
     it('should handle confirmation with valid token', async () => {
@@ -173,6 +174,7 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmationToken: TEST_CONFIRM_TOKEN,
           unsubscribeToken: TEST_UNSUB_TOKEN,
+          confirmed: false,
         },
       });
 
@@ -187,8 +189,8 @@ describe('API Endpoints (e2e)', () => {
         where: { email: TEST_EMAIL },
       });
 
-      expect(confirmedSubscription.confirmed).toBe(true);
-      expect(confirmedSubscription.confirmationToken).toBeNull();
+      expect(confirmedSubscription?.confirmed).toBe(true);
+      expect(confirmedSubscription?.confirmationToken).toBeNull();
     });
 
     it('should handle unsubscribe with valid token', async () => {
@@ -199,6 +201,7 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmed: true,
           unsubscribeToken: TEST_UNSUB_TOKEN,
+          confirmationToken: null,
         },
       });
 
@@ -297,7 +300,7 @@ describe('API Endpoints (e2e)', () => {
       });
 
       expect(confirmedSubscription.confirmed).toBe(true);
-      expect(confirmedSubscription.confirmationToken).toBeNull();
+      expect(confirmedSubscription?.confirmationToken).toBeNull();
 
       await request(app.getHttpServer())
         .get(`/api/unsubscribe/${unsubscribeToken}`)
