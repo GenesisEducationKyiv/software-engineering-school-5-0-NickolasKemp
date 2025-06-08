@@ -299,7 +299,7 @@ describe('API Endpoints (e2e)', () => {
         where: { email: LIFECYCLE_EMAIL },
       });
 
-      expect(confirmedSubscription.confirmed).toBe(true);
+      expect(confirmedSubscription?.confirmed).toBe(true);
       expect(confirmedSubscription?.confirmationToken).toBeNull();
 
       await request(app.getHttpServer())
