@@ -20,13 +20,13 @@ import { TasksModule } from './tasks/tasks.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const redisUrl = configService.get<string>('REDIS_URL');
-        
+
         if (redisUrl) {
           return {
             redis: redisUrl,
           };
         }
-        
+
         return {
           redis: {
             host: configService.get<string>('REDIS_HOST', 'localhost'),

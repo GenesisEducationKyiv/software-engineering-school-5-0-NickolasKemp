@@ -25,7 +25,7 @@ describe('API Endpoints (e2e)', () => {
     sendConfirmationEmail: jest.fn().mockResolvedValue(undefined),
     sendWeatherUpdate: jest.fn().mockResolvedValue(undefined),
   };
-  
+
   const createTestModule = async (): Promise<TestingModule> => {
     return Test.createTestingModule({
       imports: [AppModule],
@@ -43,15 +43,17 @@ describe('API Endpoints (e2e)', () => {
 
   beforeAll(async (): Promise<void> => {
     const moduleFixture = await createTestModule();
-    
+
     app = moduleFixture.createNestApplication();
     prismaService = app.get<MockPrismaService>(PrismaService);
-    
-    app.useGlobalPipes(new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }));
-    
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+      }),
+    );
+
     await app.init();
   });
 
@@ -91,11 +93,11 @@ describe('API Endpoints (e2e)', () => {
           expect(res.body.message).toContain('City is required');
         });
     });
-    
+
     it('should return 404 when weather service fails', () => {
       const mockWeatherService = app.get<MockWeatherService>(WeatherService);
       jest.spyOn(mockWeatherService, 'getWeather').mockRejectedValueOnce(new Error('API error'));
-      
+
       return request(app.getHttpServer())
         .get(`/api/weather?city=${TEST_CITY}`)
         .expect(HttpStatus.NOT_FOUND)
@@ -121,7 +123,7 @@ describe('API Endpoints (e2e)', () => {
       expect(mockEmailService.sendConfirmationEmail).toHaveBeenCalledWith(
         TEST_EMAIL,
         expect.any(String),
-        expect.any(String)
+        expect.any(String),
       );
 
       const subscription = await prismaService.subscription.findUnique({
@@ -129,12 +131,12 @@ describe('API Endpoints (e2e)', () => {
       });
 
       expect(subscription).toBeDefined();
-      expect(subscription.email).toBe(TEST_EMAIL);
-      expect(subscription.city).toBe(TEST_CITY);
-      expect(subscription.frequency).toBe('daily');
-      expect(subscription.confirmed).toBe(false);
+      expect(subscription?.email).toBe(TEST_EMAIL);
+      expect(subscription?.city).toBe(TEST_CITY);
+      expect(subscription?.frequency).toBe('daily');
+      expect(subscription?.confirmed).toBe(false);
     });
-    
+
     it('should handle duplicate subscription', async () => {
       await prismaService.subscription.create({
         data: {
@@ -143,9 +145,10 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmationToken: TEST_CONFIRM_TOKEN,
           unsubscribeToken: TEST_UNSUB_TOKEN,
-        }
+          confirmed: false,
+        },
       });
-      
+
       await request(app.getHttpServer())
         .post('/api/subscribe')
         .send({
@@ -154,13 +157,13 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'hourly',
         })
         .expect(HttpStatus.CONFLICT);
-      
+
       const subscription = await prismaService.subscription.findUnique({
         where: { email: TEST_EMAIL },
       });
-      
-      expect(subscription.city).toBe(TEST_CITY);
-      expect(subscription.frequency).toBe('daily');
+
+      expect(subscription?.city).toBe(TEST_CITY);
+      expect(subscription?.frequency).toBe('daily');
     });
 
     it('should handle confirmation with valid token', async () => {
@@ -171,7 +174,8 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmationToken: TEST_CONFIRM_TOKEN,
           unsubscribeToken: TEST_UNSUB_TOKEN,
-        }
+          confirmed: false,
+        },
       });
 
       await request(app.getHttpServer())
@@ -185,8 +189,8 @@ describe('API Endpoints (e2e)', () => {
         where: { email: TEST_EMAIL },
       });
 
-      expect(confirmedSubscription.confirmed).toBe(true);
-      expect(confirmedSubscription.confirmationToken).toBeNull();
+      expect(confirmedSubscription?.confirmed).toBe(true);
+      expect(confirmedSubscription?.confirmationToken).toBeNull();
     });
 
     it('should handle unsubscribe with valid token', async () => {
@@ -197,7 +201,8 @@ describe('API Endpoints (e2e)', () => {
           frequency: 'daily',
           confirmed: true,
           unsubscribeToken: TEST_UNSUB_TOKEN,
-        }
+          confirmationToken: null,
+        },
       });
 
       await request(app.getHttpServer())
@@ -259,15 +264,11 @@ describe('API Endpoints (e2e)', () => {
     });
 
     it('should return 404 for missing token parameter', () => {
-      return request(app.getHttpServer())
-        .get('/api/confirm/')
-        .expect(HttpStatus.NOT_FOUND);
+      return request(app.getHttpServer()).get('/api/confirm/').expect(HttpStatus.NOT_FOUND);
     });
 
     it('should return 404 for missing unsubscribe token parameter', () => {
-      return request(app.getHttpServer())
-        .get('/api/unsubscribe/')
-        .expect(HttpStatus.NOT_FOUND);
+      return request(app.getHttpServer()).get('/api/unsubscribe/').expect(HttpStatus.NOT_FOUND);
     });
   });
 
@@ -275,7 +276,7 @@ describe('API Endpoints (e2e)', () => {
     it('should handle the entire subscription lifecycle', async () => {
       const confirmToken = 'test-confirmation-token';
       const unsubscribeToken = 'test-unsubscribe-token';
-      
+
       await prismaService.subscription.create({
         data: {
           email: LIFECYCLE_EMAIL,
@@ -284,9 +285,9 @@ describe('API Endpoints (e2e)', () => {
           confirmed: false,
           confirmationToken: confirmToken,
           unsubscribeToken: unsubscribeToken,
-        }
+        },
       });
-      
+
       await request(app.getHttpServer())
         .get(`/api/confirm/${confirmToken}`)
         .expect(HttpStatus.OK)
@@ -298,8 +299,8 @@ describe('API Endpoints (e2e)', () => {
         where: { email: LIFECYCLE_EMAIL },
       });
 
-      expect(confirmedSubscription.confirmed).toBe(true);
-      expect(confirmedSubscription.confirmationToken).toBeNull();
+      expect(confirmedSubscription?.confirmed).toBe(true);
+      expect(confirmedSubscription?.confirmationToken).toBeNull();
 
       await request(app.getHttpServer())
         .get(`/api/unsubscribe/${unsubscribeToken}`)
@@ -315,4 +316,4 @@ describe('API Endpoints (e2e)', () => {
       expect(deletedSubscription).toBeNull();
     });
   });
-}); 
+});
