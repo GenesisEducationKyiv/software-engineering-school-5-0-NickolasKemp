@@ -35,20 +35,6 @@ Given these requirements, the choice of framework is critical for long-term succ
 
 **Selected NestJS**.
 
-### Project Structure
-
-```text
-src/            # Application source code
-├── weather/         # Weather data retrieval logic and endpoints
-├── subscription/    # Subscription management and confirmation flows
-├── email/           # Email notification service
-├── tasks/           # Background processing (e.g., scheduled weather updates)
-├── prisma/          # Database integration
-├── app.module.ts    # Root module
-static/         # Static files (e.g., HTML landing page)
-test/           # Automated tests (unit, integration, e2e, mocks)
-```
-
 ### Consequences
 
 #### Positive

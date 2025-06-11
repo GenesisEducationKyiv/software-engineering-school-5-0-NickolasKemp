@@ -35,11 +35,25 @@
 - **External Weather API**: Integrates with http://api.weatherapi.com/v1/ to retrieve current weather data for requested cities.
 
 ### 2.2 System Components
-- **API Layer**: NestJS controllers handling HTTP requests for weather and subscription endpoints.
-- **Service Layer**: Business logic for weather retrieval, subscription management, and email sending.
-- **Database Layer**: PostgreSQL with Prisma for storing subscription data.
-- **Task Scheduler**: NestJS Schedule and BullMQ for sending periodic email updates.
-- **Frontend**: Static HTML page served by NestJS for user subscriptions.
+
+#### 2.2.1 C4 Diagrams
+
+##### Level 1: System Context
+![C4 Level 1](./images/c4-level1.png)
+
+##### Level 2: Container Diagram
+![C4 Level 2](./images/c4-level2.png)
+
+##### Level 3: Component Diagram
+![C4 Level 3](./images/c4-level3.png)
+
+#### 2.2.2 C4 Components Detailed Descriptions
+
+- **Email Component**: Handles the creation and sending of emails, including confirmation and weather update notifications, using SMTP.
+- **Task Component**: Schedules and triggers periodic weather update emails based on user subscription frequency.
+- **Subscription Component**: Manages user subscriptions, including creation, confirmation, and unsubscription logic.
+- **Weather Component**: Retrieves and manages weather data from the external WeatherAPI and provides it to other components.
+- **Prisma Component**: Manages all database interactions using Prisma ORM, including reading and writing subscription data.
 
 ### 2.3 Database Schema
 - **Table**: subscriptions
@@ -55,6 +69,7 @@
   - `updatedAt`: Timestamp (updated on change, not null)
 - **Indexes**: On `email`, `confirmationToken`, and `unsubscribeToken` for query performance.
 - **Migrations**: Managed via Prisma's `migrate` command to initialize and update the schema.
+
 
 ## 3. API Specification
 The API adheres to the Swagger spec provided, with the following endpoints:
