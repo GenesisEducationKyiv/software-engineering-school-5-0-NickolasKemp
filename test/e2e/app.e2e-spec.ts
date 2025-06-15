@@ -65,10 +65,6 @@ describe('API Endpoints (e2e)', () => {
     jest.resetModules();
     jest.clearAllMocks();
     prismaService.subscription.deleteMany();
-
-    jest.mock('uuid', () => ({
-      v4: jest.fn().mockReturnValue('test-token'),
-    }));
   });
 
   describe('/api/weather (GET)', () => {
@@ -122,8 +118,10 @@ describe('API Endpoints (e2e)', () => {
       expect(mockEmailService.sendConfirmationEmail).toHaveBeenCalledTimes(1);
       expect(mockEmailService.sendConfirmationEmail).toHaveBeenCalledWith(
         TEST_EMAIL,
-        expect.any(String),
-        expect.any(String),
+        expect.objectContaining({
+          token: expect.any(String),
+          appUrl: expect.any(String),
+        }),
       );
 
       const subscription = await prismaService.subscription.findUnique({

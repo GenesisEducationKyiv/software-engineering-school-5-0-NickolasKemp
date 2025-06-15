@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailService } from './email.service';
-import { WeatherData } from '../weather/weather.service';
+import { WeatherData } from '../interfaces/weather.interface';
 
 jest.mock('nodemailer');
 
@@ -63,7 +63,7 @@ describe('EmailService', () => {
       const token: string = 'test-token';
       const appUrl: string = 'http://localhost:3000';
 
-      await emailService.sendConfirmationEmail(email, token, appUrl);
+      await emailService.sendConfirmationEmail(email, { token, appUrl });
 
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -82,7 +82,7 @@ describe('EmailService', () => {
 
       mockSendMail.mockRejectedValueOnce(new Error('SMTP error'));
 
-      await expect(emailService.sendConfirmationEmail(email, token, appUrl)).rejects.toThrow(
+      await expect(emailService.sendConfirmationEmail(email, { token, appUrl })).rejects.toThrow(
         'SMTP error',
       );
     });
@@ -100,7 +100,12 @@ describe('EmailService', () => {
       const token = 'unsub-token';
       const appUrl = 'http://localhost:3000';
 
-      await emailService.sendWeatherUpdate(email, city, weather, token, appUrl);
+      await emailService.sendWeatherUpdate(email, {
+        city,
+        weather,
+        unsubscribeToken: token,
+        appUrl,
+      });
 
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({

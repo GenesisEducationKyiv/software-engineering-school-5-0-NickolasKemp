@@ -6,7 +6,8 @@ import {
   NotFoundException,
   Logger,
 } from '@nestjs/common';
-import { WeatherService, WeatherData } from './weather.service';
+import { WeatherService } from './weather.service';
+import { WeatherData } from '../interfaces/weather.interface';
 
 @Controller('api/weather')
 export class WeatherController {
