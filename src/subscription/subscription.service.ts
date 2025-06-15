@@ -6,8 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { WeatherService } from '../weather/weather.service';
 import { CreateSubscriptionDto } from 'src/subscription/dto/create-subscription.dto';
+import { SubscriptionManager } from '../interfaces/subscription.interface';
+
 @Injectable()
-export class SubscriptionService {
+export class SubscriptionService implements SubscriptionManager {
   private readonly logger = new Logger(SubscriptionService.name);
 
   constructor(
@@ -50,7 +52,7 @@ export class SubscriptionService {
       });
 
       try {
-        await this.emailService.sendConfirmationEmail(email, confirmationToken, appUrl);
+        await this.emailService.sendConfirmationEmail(email, { token: confirmationToken, appUrl });
         this.logger.log(`Confirmation email sent to ${email}`);
       } catch (emailError) {
         this.logger.error(`Failed to send confirmation email to ${email}`, emailError.stack);

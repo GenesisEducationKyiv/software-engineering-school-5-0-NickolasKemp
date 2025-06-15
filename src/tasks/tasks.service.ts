@@ -4,9 +4,10 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
+import { Scheduler } from '../interfaces/task.interface';
 
 @Injectable()
-export class TasksService {
+export class TasksService implements Scheduler {
   private readonly logger = new Logger(TasksService.name);
 
   constructor(

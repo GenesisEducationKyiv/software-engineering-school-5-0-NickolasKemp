@@ -60,7 +60,9 @@ describe('SubscriptionController', () => {
         city: 'London',
         frequency: 'daily',
       };
-      const expectedResponse = { message: 'Subscription successful. Confirmation email sent.' };
+      const expectedResponse = {
+        message: 'Subscription successful. Confirmation email sent.',
+      };
 
       (service.subscribe as jest.Mock).mockResolvedValue(expectedResponse);
 
@@ -74,7 +76,9 @@ describe('SubscriptionController', () => {
   describe('confirm', () => {
     it('should call subscriptionService.confirm with correct token', async () => {
       const token = 'valid-token';
-      const expectedResponse = { message: 'Subscription confirmed successfully' };
+      const expectedResponse = {
+        message: 'Subscription confirmed successfully',
+      };
 
       const result = await controller.confirm(token);
 

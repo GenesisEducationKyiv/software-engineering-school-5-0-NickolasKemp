@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   BadRequestException,
-  Logger,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -14,8 +13,6 @@ import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 
 @Controller('api')
 export class SubscriptionController {
-  private readonly logger = new Logger(SubscriptionController.name);
-
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Post('subscribe')

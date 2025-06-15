@@ -62,13 +62,12 @@ describe('WeatherUpdatesProcessor', () => {
       await processor.processWeatherUpdate(mockJob as any);
 
       expect(mockWeatherService.getWeather).toHaveBeenCalledWith('London');
-      expect(mockEmailService.sendWeatherUpdate).toHaveBeenCalledWith(
-        'user@example.com',
-        'London',
-        mockWeather,
-        'unsubscribe-token',
-        'http://localhost:3000',
-      );
+      expect(mockEmailService.sendWeatherUpdate).toHaveBeenCalledWith('user@example.com', {
+        city: 'London',
+        weather: mockWeather,
+        unsubscribeToken: 'unsubscribe-token',
+        appUrl: 'http://localhost:3000',
+      });
     });
 
     it('should handle errors from the weather service', async () => {

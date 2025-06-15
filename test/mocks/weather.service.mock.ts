@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { WeatherData } from '../../src/weather/weather.service';
+import { WeatherData } from '../../src/interfaces/weather.interface';
 
 @Injectable()
 export class MockWeatherService {
