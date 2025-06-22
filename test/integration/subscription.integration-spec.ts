@@ -3,6 +3,8 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { PrismaService } from '../../src/prisma/prisma.service';
+import { WeatherApiClient } from '../../src/weather/weather-api.client';
+import { mockWeatherApiClient } from '../mocks/weather-api.client.mock';
 import { setupTestApp } from './setup-test-app';
 import * as http from 'http';
 
@@ -21,7 +23,10 @@ describe('Subscription API Integration Tests', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(WeatherApiClient)
+      .useValue(mockWeatherApiClient)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     prismaService = moduleFixture.get<PrismaService>(PrismaService);
