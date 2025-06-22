@@ -13,3 +13,18 @@ export interface WeatherApiResponse {
     };
   };
 }
+
+export interface OpenWeatherMapResponse {
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  weather: Array<{
+    description: string;
+  }>;
+}
+
+export interface WeatherProvider {
+  name: string;
+  fetchWeatherData(city: string): Promise<WeatherData>;
+}

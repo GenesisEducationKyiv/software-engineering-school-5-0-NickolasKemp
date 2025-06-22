@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { WeatherApiClient } from '../../src/weather/weather-api.client';
-import { mockWeatherApiClient } from '../mocks/weather-api.client.mock';
 import { setupTestApp } from './setup-test-app';
 import * as http from 'http';
+import { WeatherClient } from '../../src/weather/weather-client';
+import { mockWeatherClient } from '../mocks/weather-client.mock';
 
 describe('Weather API Integration Tests', () => {
   let app: INestApplication;
@@ -15,8 +15,8 @@ describe('Weather API Integration Tests', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(WeatherApiClient)
-      .useValue(mockWeatherApiClient)
+      .overrideProvider(WeatherClient)
+      .useValue(mockWeatherClient)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -44,8 +44,7 @@ describe('Weather API Integration Tests', () => {
     });
 
     it('should handle invalid city', async () => {
-      mockWeatherApiClient.fetchWeatherData.mockRejectedValueOnce(new Error('City not found'));
-
+      mockWeatherClient.fetchWeatherData.mockRejectedValueOnce(new Error('City not found'));
       await request(server).get('/api/weather').query({ city: 'NonExistentCity123' }).expect(404);
     });
   });
