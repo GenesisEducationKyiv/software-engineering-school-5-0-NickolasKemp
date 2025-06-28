@@ -1,5 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import axios from 'axios';
 import {
   WeatherData,
@@ -7,21 +6,30 @@ import {
   WeatherProvider,
 } from '../../interfaces/weather.interface';
 import { WeatherLogger } from '../weather-logger';
+import { WeatherUrlBuilderService } from '../weather-url-builder.service';
 
 @Injectable()
 export class WeatherApiProvider implements WeatherProvider {
   public readonly name = 'weatherapi.com';
   private readonly logger = new Logger(WeatherApiProvider.name);
+  private readonly baseUrl = 'http://api.weatherapi.com/v1/current.json';
 
   constructor(
-    private readonly configService: ConfigService,
+    @Inject('WEATHER_API_KEY') private readonly apiKey: string,
+    private readonly weatherUrlBuilderService: WeatherUrlBuilderService,
     private readonly weatherLogger: WeatherLogger,
   ) {}
 
   async fetchWeatherData(city: string): Promise<WeatherData> {
     try {
-      const apiKey = this.configService.get<string>('WEATHER_API_KEY');
-      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`;
+      if (!this.apiKey) {
+        throw new Error('WEATHER_API_KEY is not configured');
+      }
+
+      const url = this.weatherUrlBuilderService.buildUrl(this.baseUrl, {
+        key: this.apiKey,
+        q: city,
+      });
 
       const response = await axios.get<WeatherApiResponse>(url);
       this.weatherLogger.logProviderResponse(this.name, city, response.data);

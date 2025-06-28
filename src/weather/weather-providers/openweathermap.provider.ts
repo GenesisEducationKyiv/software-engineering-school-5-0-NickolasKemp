@@ -1,5 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import axios from 'axios';
 import {
   WeatherData,
@@ -7,21 +6,31 @@ import {
   WeatherProvider,
 } from '../../interfaces/weather.interface';
 import { WeatherLogger } from '../weather-logger';
+import { WeatherUrlBuilderService } from '../weather-url-builder.service';
 
 @Injectable()
 export class OpenWeatherMapProvider implements WeatherProvider {
   public readonly name = 'openweathermap.org';
   private readonly logger = new Logger(OpenWeatherMapProvider.name);
+  private readonly baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 
   constructor(
-    private readonly configService: ConfigService,
+    @Inject('OPENWEATHER_API_KEY') private readonly apiKey: string,
+    private readonly weatherUrlBuilderService: WeatherUrlBuilderService,
     private readonly weatherLogger: WeatherLogger,
   ) {}
 
   async fetchWeatherData(city: string): Promise<WeatherData> {
     try {
-      const apiKey = this.configService.get<string>('OPENWEATHER_API_KEY');
-      const url = `http://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+      if (!this.apiKey) {
+        throw new Error('OPENWEATHER_API_KEY is not configured');
+      }
+
+      const url = this.weatherUrlBuilderService.buildUrl(this.baseUrl, {
+        q: city,
+        appid: this.apiKey,
+        units: 'metric',
+      });
 
       const response = await axios.get<OpenWeatherMapResponse>(url);
       this.weatherLogger.logProviderResponse(this.name, city, response.data);

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { WeatherApiProvider } from './weather-api.provider';
 import { WeatherLogger } from '../weather-logger';
+import { WeatherUrlBuilderService } from '../weather-url-builder.service';
 import { WeatherApiResponse, WeatherData } from '../../interfaces/weather.interface';
 
 jest.mock('axios');
@@ -10,12 +10,12 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('WeatherApiProvider', () => {
   let service: WeatherApiProvider;
-  let configService: jest.Mocked<ConfigService>;
+  let weatherUrlBuilderService: jest.Mocked<WeatherUrlBuilderService>;
   let weatherLogger: jest.Mocked<WeatherLogger>;
 
   beforeEach(async () => {
-    const mockConfigService = {
-      get: jest.fn(),
+    const mockWeatherUrlBuilderService = {
+      buildUrl: jest.fn(),
     };
 
     const mockWeatherLogger = {
@@ -26,8 +26,12 @@ describe('WeatherApiProvider', () => {
       providers: [
         WeatherApiProvider,
         {
-          provide: ConfigService,
-          useValue: mockConfigService,
+          provide: 'WEATHER_API_KEY',
+          useValue: 'test-api-key',
+        },
+        {
+          provide: WeatherUrlBuilderService,
+          useValue: mockWeatherUrlBuilderService,
         },
         {
           provide: WeatherLogger,
@@ -37,7 +41,7 @@ describe('WeatherApiProvider', () => {
     }).compile();
 
     service = module.get<WeatherApiProvider>(WeatherApiProvider);
-    configService = module.get(ConfigService);
+    weatherUrlBuilderService = module.get(WeatherUrlBuilderService);
     weatherLogger = module.get(WeatherLogger);
   });
 
@@ -56,7 +60,7 @@ describe('WeatherApiProvider', () => {
   describe('fetchWeatherData', () => {
     it('should fetch weather data successfully', async () => {
       const city = 'London';
-      const apiKey = 'test-api-key';
+      const url = 'http://api.weatherapi.com/v1/current.json?key=test-api-key&q=London';
       const apiResponse: WeatherApiResponse = {
         current: {
           temp_c: 20,
@@ -73,16 +77,20 @@ describe('WeatherApiProvider', () => {
         description: 'Sunny',
       };
 
-      configService.get.mockReturnValue(apiKey);
+      weatherUrlBuilderService.buildUrl.mockReturnValue(url);
       mockedAxios.get.mockResolvedValue({ data: apiResponse });
 
       const result = await service.fetchWeatherData(city);
 
       expect(result).toEqual(expectedResponse);
-      expect(configService.get).toHaveBeenCalledWith('WEATHER_API_KEY');
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}`,
+      expect(weatherUrlBuilderService.buildUrl).toHaveBeenCalledWith(
+        'http://api.weatherapi.com/v1/current.json',
+        {
+          key: 'test-api-key',
+          q: city,
+        },
       );
+      expect(mockedAxios.get).toHaveBeenCalledWith(url);
       expect(weatherLogger.logProviderResponse).toHaveBeenCalledWith(
         'weatherapi.com',
         city,
@@ -92,10 +100,10 @@ describe('WeatherApiProvider', () => {
 
     it('should handle API errors', async () => {
       const city = 'London';
-      const apiKey = 'test-api-key';
+      const url = 'http://api.weatherapi.com/v1/current.json?key=test-api-key&q=London';
       const error = new Error('API Error');
 
-      configService.get.mockReturnValue(apiKey);
+      weatherUrlBuilderService.buildUrl.mockReturnValue(url);
       mockedAxios.get.mockRejectedValue(error);
 
       await expect(service.fetchWeatherData(city)).rejects.toThrow('API Error');

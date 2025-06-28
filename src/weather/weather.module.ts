@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WeatherController } from './weather.controller';
 import { WeatherService } from './weather.service';
 import { WeatherClient } from './weather-client';
 import { WeatherLogger } from './weather-logger';
+import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { WeatherApiProvider } from './weather-providers/weather-api.provider';
 import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provider';
 
@@ -14,8 +15,20 @@ import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provi
     WeatherService,
     WeatherClient,
     WeatherLogger,
+    WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
+    {
+      provide: 'OPENWEATHER_API_KEY',
+      useFactory: (configService: ConfigService) =>
+        configService.get<string>('OPENWEATHER_API_KEY'),
+      inject: [ConfigService],
+    },
+    {
+      provide: 'WEATHER_API_KEY',
+      useFactory: (configService: ConfigService) => configService.get<string>('WEATHER_API_KEY'),
+      inject: [ConfigService],
+    },
     {
       provide: 'WEATHER_PROVIDERS',
       useFactory: (
