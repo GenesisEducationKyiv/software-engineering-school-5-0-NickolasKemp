@@ -3,13 +3,7 @@ import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { WeatherService } from '../weather/weather.service';
 import { EmailService } from '../email/email.service';
-
-interface WeatherUpdateJob {
-  email: string;
-  city: string;
-  token: string;
-  appUrl: string;
-}
+import { WeatherUpdateJob } from '../interfaces/task.interface';
 
 @Processor('weather-updates')
 export class WeatherUpdatesProcessor {
@@ -27,7 +21,12 @@ export class WeatherUpdatesProcessor {
 
     try {
       const weather = await this.weatherService.getWeather(city);
-      await this.emailService.sendWeatherUpdate(email, city, weather, token, appUrl);
+      await this.emailService.sendWeatherUpdate(email, {
+        city,
+        weather,
+        unsubscribeToken: token,
+        appUrl,
+      });
       this.logger.log(`Weather update email sent to ${email} for ${city}`);
     } catch (error) {
       this.logger.error(

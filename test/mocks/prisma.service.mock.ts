@@ -17,7 +17,11 @@ export class MockPrismaService implements OnModuleInit, OnModuleDestroy {
         ({
           where,
         }: {
-          where?: { email?: string; confirmationToken?: string; unsubscribeToken?: string };
+          where?: {
+            email?: string;
+            confirmationToken?: string;
+            unsubscribeToken?: string;
+          };
         }): Subscription | null => {
           const { email, confirmationToken, unsubscribeToken } = where || {};
           if (email) {
@@ -81,7 +85,11 @@ export class MockPrismaService implements OnModuleInit, OnModuleDestroy {
         }
 
         if (subscription) {
-          const updated: Subscription = { ...subscription, ...data, updatedAt: new Date() };
+          const updated: Subscription = {
+            ...subscription,
+            ...data,
+            updatedAt: new Date(),
+          };
           this.subscriptions.set(updated.email, updated);
           return updated;
         }
