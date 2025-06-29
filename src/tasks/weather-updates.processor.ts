@@ -1,16 +1,16 @@
 import { Process, Processor } from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { Job } from 'bull';
-import { WeatherService } from '../weather/weather.service';
 import { EmailService } from '../email/email.service';
 import { WeatherUpdateJob } from '../interfaces/task.interface';
+import { WeatherService as WeatherServiceInterface } from '../interfaces/weather.interface';
 
 @Processor('weather-updates')
 export class WeatherUpdatesProcessor {
   private readonly logger = new Logger(WeatherUpdatesProcessor.name);
 
   constructor(
-    private readonly weatherService: WeatherService,
+    @Inject('WeatherService') private readonly weatherService: WeatherServiceInterface,
     private readonly emailService: EmailService,
   ) {}
 

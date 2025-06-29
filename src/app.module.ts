@@ -11,10 +11,16 @@ import { WeatherModule } from './weather/weather.module';
 import { EmailModule } from './email/email.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { TasksModule } from './tasks/tasks.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    CacheModule.register({
+      isGlobal: true,
+    }),
+    PrometheusModule.register(),
     ScheduleModule.forRoot(),
     BullModule.forRootAsync({
       inject: [ConfigService],

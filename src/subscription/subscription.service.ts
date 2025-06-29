@@ -1,8 +1,8 @@
-import { Injectable, ConflictException, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, Logger, Inject } from '@nestjs/common';
 import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
-import { WeatherService } from '../weather/weather.service';
+import { WeatherService as WeatherServiceInterface } from '../interfaces/weather.interface';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { SubscriptionManager } from '../interfaces/subscription.interface';
 import { SubscriptionRepository } from './prisma-subscription.repository';
@@ -15,7 +15,7 @@ export class SubscriptionService implements SubscriptionManager {
     private readonly subscriptionRepository: SubscriptionRepository,
     private readonly emailService: EmailService,
     private readonly configService: ConfigService,
-    private readonly weatherService: WeatherService,
+    @Inject('WeatherService') private readonly weatherService: WeatherServiceInterface,
   ) {}
 
   async subscribe(createSubscriptionDto: CreateSubscriptionDto): Promise<void> {
