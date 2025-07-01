@@ -4,7 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
+<<<<<<< HEAD
+    branches: [main]
+=======
 
+>>>>>>> 208e8836cb7cf33f16b330ac5564ae62d680ecc0
 jobs:
   unit-tests:
     name: Unit Tests
