@@ -11,6 +11,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+weather-provider-logs.jsonl
 
 # OS
 .DS_Store
