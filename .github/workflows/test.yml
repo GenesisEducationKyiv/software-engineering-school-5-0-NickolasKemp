@@ -4,11 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-<<<<<<< HEAD
-    branches: [main]
-=======
 
->>>>>>> 208e8836cb7cf33f16b330ac5564ae62d680ecc0
 jobs:
   unit-tests:
     name: Unit Tests
@@ -94,3 +90,9 @@ jobs:
           NODE_ENV: test
           REDIS_HOST: redis
           REDIS_PORT: 6379
+          WEATHER_API_KEY: 1a48b64e96174e409ce123137251705
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          APP_URL: http://localhost:3000
