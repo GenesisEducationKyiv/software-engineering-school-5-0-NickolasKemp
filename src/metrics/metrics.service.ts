@@ -11,18 +11,11 @@ export class MetricsService {
     name: 'weather_cache_miss_total',
     help: 'Total number of weather cache misses',
   });
-  private readonly cacheErrorCounter = new Counter({
-    name: 'weather_cache_error_total',
-    help: 'Total number of weather cache errors',
-  });
 
   incHit() {
     this.cacheHitCounter.inc();
   }
   incMiss() {
     this.cacheMissCounter.inc();
-  }
-  incError() {
-    this.cacheErrorCounter.inc();
   }
 }
