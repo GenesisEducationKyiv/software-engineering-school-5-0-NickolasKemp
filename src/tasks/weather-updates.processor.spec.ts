@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WeatherUpdatesProcessor } from './weather-updates.processor';
-import { WeatherService } from '../weather/weather.service';
 import { EmailService } from '../email/email.service';
 
 describe('WeatherUpdatesProcessor', () => {
@@ -21,7 +20,7 @@ describe('WeatherUpdatesProcessor', () => {
       providers: [
         WeatherUpdatesProcessor,
         {
-          provide: WeatherService,
+          provide: 'WeatherService',
           useValue: mockWeatherService,
         },
         {

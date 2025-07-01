@@ -3,7 +3,6 @@ import { SubscriptionService } from './subscription.service';
 import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { WeatherService } from '../weather/weather.service';
 import { SubscriptionRepository } from './prisma-subscription.repository';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -81,7 +80,7 @@ describe('SubscriptionService', () => {
           useValue: mockConfigService,
         },
         {
-          provide: WeatherService,
+          provide: 'WeatherService',
           useValue: mockWeatherService,
         },
       ],

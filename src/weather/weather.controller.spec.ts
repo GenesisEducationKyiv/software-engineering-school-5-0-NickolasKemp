@@ -13,7 +13,7 @@ describe('WeatherController', () => {
       controllers: [WeatherController],
       providers: [
         {
-          provide: WeatherService,
+          provide: 'WeatherService',
           useValue: {
             getWeather: jest.fn(),
           },
@@ -28,7 +28,7 @@ describe('WeatherController', () => {
     }).compile();
 
     weatherController = module.get<WeatherController>(WeatherController);
-    weatherService = module.get<WeatherService>(WeatherService);
+    weatherService = module.get<WeatherService>('WeatherService');
   });
 
   it('should be defined', () => {

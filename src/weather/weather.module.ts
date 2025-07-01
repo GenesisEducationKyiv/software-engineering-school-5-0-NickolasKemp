@@ -9,6 +9,7 @@ import { WeatherApiProvider } from './weather-providers/weather-api.provider';
 import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provider';
 import { CachedWeatherService } from './cached-weather.service';
 import { CacheModule } from '../cache/cache.module';
+import { MetricsService } from '../metrics/metrics.service';
 
 @Module({
   imports: [ConfigModule, CacheModule],
@@ -25,6 +26,7 @@ import { CacheModule } from '../cache/cache.module';
     WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
+    MetricsService,
     {
       provide: 'OPENWEATHER_API_KEY',
       useFactory: (configService: ConfigService) =>
