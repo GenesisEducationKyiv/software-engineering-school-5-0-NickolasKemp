@@ -11,7 +11,6 @@ export class CacheService {
   }
 
   async set<T>(key: string, value: T, ttlInSeconds: number): Promise<void> {
-    // @ts-expect-error ttl should be passed in options
-    await this.cacheManager.set(key, value, { ttl: ttlInSeconds * 1000 });
+    await this.cacheManager.set(key, value, ttlInSeconds * 1000);
   }
 }
