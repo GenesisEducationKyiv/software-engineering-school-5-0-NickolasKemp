@@ -28,3 +28,7 @@ export interface WeatherProvider {
   name: string;
   fetchWeatherData(city: string): Promise<WeatherData>;
 }
+
+export abstract class AbstractWeatherService {
+  abstract getWeather(city: string): Promise<WeatherData>;
+}

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WeatherService } from './weather.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 import { WeatherClient } from './weather-client';
 import { WeatherData } from '../interfaces/weather.interface';
 
@@ -14,6 +15,10 @@ describe('WeatherService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         WeatherService,
+        {
+          provide: AbstractWeatherService,
+          useExisting: WeatherService,
+        },
         {
           provide: WeatherClient,
           useValue: mockWeatherClient,
