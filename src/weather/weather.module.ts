@@ -10,6 +10,7 @@ import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provi
 import { CachedWeatherService } from './cached-weather.service';
 import { CacheModule } from '../cache/cache.module';
 import { MetricsService } from '../metrics/metrics.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 @Module({
   imports: [ConfigModule, CacheModule],
@@ -18,7 +19,7 @@ import { MetricsService } from '../metrics/metrics.service';
     WeatherService,
     CachedWeatherService,
     {
-      provide: 'WeatherService',
+      provide: AbstractWeatherService,
       useClass: CachedWeatherService,
     },
     WeatherClient,
@@ -52,6 +53,6 @@ import { MetricsService } from '../metrics/metrics.service';
       inject: ['WEATHER_PROVIDERS'],
     },
   ],
-  exports: ['WeatherService'],
+  exports: [AbstractWeatherService],
 })
 export class WeatherModule {}

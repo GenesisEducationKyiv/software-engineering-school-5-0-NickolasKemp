@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../../src/email/email.service';
 import { MockPrismaService } from '../mocks/prisma.service.mock';
 import { MockConfigService } from '../mocks/config.service.mock';
-import { WeatherService } from '../../src/weather/weather.service';
+import { AbstractWeatherService } from '../../src/interfaces/weather.interface';
 import { MockWeatherService } from '../mocks/weather.service.mock';
 
 const TEST_EMAIL = 'test@example.com';
@@ -36,7 +36,7 @@ describe('API Endpoints (e2e)', () => {
       .useValue(mockEmailService)
       .overrideProvider(PrismaService)
       .useClass(MockPrismaService)
-      .overrideProvider(WeatherService)
+      .overrideProvider(AbstractWeatherService)
       .useClass(MockWeatherService)
       .compile();
   };
@@ -91,7 +91,7 @@ describe('API Endpoints (e2e)', () => {
     });
 
     it('should return 404 when weather service fails', () => {
-      const mockWeatherService = app.get<MockWeatherService>(WeatherService);
+      const mockWeatherService = app.get<MockWeatherService>(AbstractWeatherService);
       jest.spyOn(mockWeatherService, 'getWeather').mockRejectedValueOnce(new Error('API error'));
 
       return request(app.getHttpServer())

@@ -3,14 +3,14 @@ import { Logger, Inject } from '@nestjs/common';
 import { Job } from 'bull';
 import { EmailService } from '../email/email.service';
 import { WeatherUpdateJob } from '../interfaces/task.interface';
-import { WeatherService as WeatherServiceInterface } from '../interfaces/weather.interface';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 @Processor('weather-updates')
 export class WeatherUpdatesProcessor {
   private readonly logger = new Logger(WeatherUpdatesProcessor.name);
 
   constructor(
-    @Inject('WeatherService') private readonly weatherService: WeatherServiceInterface,
+    @Inject(AbstractWeatherService) private readonly weatherService: AbstractWeatherService,
     private readonly emailService: EmailService,
   ) {}
 

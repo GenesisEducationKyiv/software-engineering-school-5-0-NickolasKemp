@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { SubscriptionRepository } from './prisma-subscription.repository';
 import { PrismaService } from '../prisma/prisma.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 jest.mock('uuid', () => ({
   v4: jest
@@ -30,6 +31,8 @@ class MockSubscriptionRepository extends SubscriptionRepository {
 
 describe('SubscriptionService', () => {
   let service: SubscriptionService;
+  let mockWeatherService: jest.Mocked<AbstractWeatherService>;
+
   const mockSubscriptionRepository = new MockSubscriptionRepository();
 
   const mockEmailService = {
@@ -38,14 +41,6 @@ describe('SubscriptionService', () => {
 
   const mockConfigService = {
     get: jest.fn().mockReturnValue('http://localhost:3000'),
-  };
-
-  const mockWeatherService = {
-    getWeather: jest.fn().mockResolvedValue({
-      temperature: 21,
-      humidity: 65,
-      description: 'Sunny',
-    }),
   };
 
   const createMockSubscription = (overrides = {}) => ({
@@ -64,6 +59,10 @@ describe('SubscriptionService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
+    mockWeatherService = {
+      getWeather: jest.fn(),
+    } as unknown as jest.Mocked<AbstractWeatherService>;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubscriptionService,
@@ -80,7 +79,7 @@ describe('SubscriptionService', () => {
           useValue: mockConfigService,
         },
         {
-          provide: 'WeatherService',
+          provide: AbstractWeatherService,
           useValue: mockWeatherService,
         },
       ],

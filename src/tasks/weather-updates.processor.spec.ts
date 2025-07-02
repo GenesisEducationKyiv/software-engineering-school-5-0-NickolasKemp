@@ -1,32 +1,26 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { WeatherUpdatesProcessor } from './weather-updates.processor';
 import { EmailService } from '../email/email.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 describe('WeatherUpdatesProcessor', () => {
   let processor: WeatherUpdatesProcessor;
-
-  const mockWeatherService = {
-    getWeather: jest.fn(),
-  };
-
-  const mockEmailService = {
-    sendWeatherUpdate: jest.fn(),
-  };
+  let mockWeatherService: jest.Mocked<AbstractWeatherService>;
+  let mockEmailService: jest.Mocked<EmailService>;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    mockWeatherService = {
+      getWeather: jest.fn(),
+    } as unknown as jest.Mocked<AbstractWeatherService>;
+    mockEmailService = {
+      sendWeatherUpdate: jest.fn(),
+    } as unknown as jest.Mocked<EmailService>;
 
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         WeatherUpdatesProcessor,
-        {
-          provide: 'WeatherService',
-          useValue: mockWeatherService,
-        },
-        {
-          provide: EmailService,
-          useValue: mockEmailService,
-        },
+        { provide: AbstractWeatherService, useValue: mockWeatherService },
+        { provide: EmailService, useValue: mockEmailService },
       ],
     }).compile();
 

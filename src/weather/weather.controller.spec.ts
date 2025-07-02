@@ -2,18 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherController } from './weather.controller';
-import { WeatherService } from './weather.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 describe('WeatherController', () => {
   let weatherController: WeatherController;
-  let weatherService: WeatherService;
+  let weatherService: jest.Mocked<AbstractWeatherService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WeatherController],
       providers: [
         {
-          provide: 'WeatherService',
+          provide: AbstractWeatherService,
           useValue: {
             getWeather: jest.fn(),
           },
@@ -28,7 +28,7 @@ describe('WeatherController', () => {
     }).compile();
 
     weatherController = module.get<WeatherController>(WeatherController);
-    weatherService = module.get<WeatherService>('WeatherService');
+    weatherService = module.get(AbstractWeatherService);
   });
 
   it('should be defined', () => {

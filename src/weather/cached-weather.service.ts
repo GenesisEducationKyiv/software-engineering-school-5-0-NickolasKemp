@@ -1,14 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  WeatherData,
-  WeatherService as WeatherServiceInterface,
-} from '../interfaces/weather.interface';
+import { WeatherData, AbstractWeatherService } from '../interfaces/weather.interface';
 import { WeatherService } from './weather.service';
 import { CacheService } from '../cache/cache.service';
 import { MetricsService } from '../metrics/metrics.service';
 
 @Injectable()
-export class CachedWeatherService implements WeatherServiceInterface {
+export class CachedWeatherService implements AbstractWeatherService {
   private readonly logger = new Logger(CachedWeatherService.name);
 
   constructor(
