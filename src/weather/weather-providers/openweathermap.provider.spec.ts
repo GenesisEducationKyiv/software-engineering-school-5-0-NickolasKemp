@@ -137,7 +137,8 @@ describe('OpenWeatherMapProvider', () => {
       weatherUrlBuilderService.buildUrl.mockReturnValue(url);
       mockedAxios.get.mockRejectedValue(error);
 
-      await expect(service.fetchWeatherData(city)).rejects.toThrow('API Error');
+      const result = await service.fetchWeatherData(city);
+      expect(result).toBeNull();
 
       expect(weatherLogger.logProviderResponse).toHaveBeenCalledWith(
         'openweathermap.org',

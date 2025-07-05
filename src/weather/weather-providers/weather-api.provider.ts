@@ -3,13 +3,13 @@ import axios from 'axios';
 import {
   WeatherData,
   WeatherApiResponse,
-  WeatherProvider,
+  BaseWeatherHandler,
 } from '../../interfaces/weather.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from '../weather-url-builder.service';
 
 @Injectable()
-export class WeatherApiProvider implements WeatherProvider {
+export class WeatherApiProvider extends BaseWeatherHandler {
   public readonly name = 'weatherapi.com';
   private readonly logger = new Logger(WeatherApiProvider.name);
   private readonly baseUrl = 'http://api.weatherapi.com/v1/current.json';
@@ -18,14 +18,15 @@ export class WeatherApiProvider implements WeatherProvider {
     @Inject('WEATHER_API_KEY') private readonly apiKey: string,
     private readonly weatherUrlBuilderService: WeatherUrlBuilderService,
     private readonly weatherLogger: WeatherLogger,
-  ) {}
+  ) {
+    super();
+  }
 
-  async fetchWeatherData(city: string): Promise<WeatherData> {
+  async fetchWeatherData(city: string): Promise<WeatherData | null> {
     try {
       if (!this.apiKey) {
         throw new Error('WEATHER_API_KEY is not configured');
       }
-
       const url = this.weatherUrlBuilderService.buildUrl(this.baseUrl, {
         key: this.apiKey,
         q: city,
@@ -41,7 +42,7 @@ export class WeatherApiProvider implements WeatherProvider {
     } catch (error) {
       this.weatherLogger.logProviderResponse(this.name, city, error, true);
       this.logger.error(`Failed to fetch weather data for city: ${city}`, error.stack);
-      throw error;
+      return super.fetchWeatherData(city);
     }
   }
 }

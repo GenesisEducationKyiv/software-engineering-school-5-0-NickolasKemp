@@ -30,17 +30,15 @@ import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provi
       inject: [ConfigService],
     },
     {
-      provide: 'WEATHER_PROVIDERS',
+      provide: WeatherClient,
       useFactory: (
         weatherApiProvider: WeatherApiProvider,
         openWeatherMapProvider: OpenWeatherMapProvider,
-      ) => [weatherApiProvider, openWeatherMapProvider],
+      ) => {
+        weatherApiProvider.setNext(openWeatherMapProvider);
+        return new WeatherClient(weatherApiProvider);
+      },
       inject: [WeatherApiProvider, OpenWeatherMapProvider],
-    },
-    {
-      provide: WeatherClient,
-      useFactory: (providers: any[]) => new WeatherClient(providers),
-      inject: ['WEATHER_PROVIDERS'],
     },
   ],
   exports: [WeatherService],

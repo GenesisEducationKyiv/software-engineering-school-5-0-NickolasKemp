@@ -24,7 +24,23 @@ export interface OpenWeatherMapResponse {
   }>;
 }
 
-export interface WeatherProvider {
-  name: string;
-  fetchWeatherData(city: string): Promise<WeatherData>;
+export interface WeatherHandler {
+  setNext(handler: WeatherHandler): WeatherHandler;
+  fetchWeatherData(city: string): Promise<WeatherData | null>;
+}
+
+export abstract class BaseWeatherHandler implements WeatherHandler {
+  protected nextHandler: WeatherHandler | null = null;
+
+  setNext(handler: WeatherHandler): WeatherHandler {
+    this.nextHandler = handler;
+    return handler;
+  }
+
+  async fetchWeatherData(city: string): Promise<WeatherData | null> {
+    if (this.nextHandler) {
+      return this.nextHandler.fetchWeatherData(city);
+    }
+    return null;
+  }
 }
