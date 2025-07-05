@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WeatherService } from './weather.service';
-import { WeatherApiClient } from './weather-api.client';
+import { WeatherClient } from './weather-client';
+import { WeatherData } from '../interfaces/weather.interface';
 
 describe('WeatherService', () => {
   let weatherService: WeatherService;
 
-  const mockWeatherApiClient = {
+  const mockWeatherClient = {
     fetchWeatherData: jest.fn(),
   };
 
@@ -14,8 +15,8 @@ describe('WeatherService', () => {
       providers: [
         WeatherService,
         {
-          provide: WeatherApiClient,
-          useValue: mockWeatherApiClient,
+          provide: WeatherClient,
+          useValue: mockWeatherClient,
         },
       ],
     }).compile();
@@ -30,21 +31,17 @@ describe('WeatherService', () => {
   describe('getWeather', () => {
     it('should return weather data for a valid city', async () => {
       const city = 'London';
-      const mockWeatherData = {
-        current: {
-          temp_c: 20,
-          humidity: 65,
-          condition: {
-            text: 'Partly cloudy',
-          },
-        },
+      const mockWeatherData: WeatherData = {
+        temperature: 20,
+        humidity: 65,
+        description: 'Partly cloudy',
       };
 
-      mockWeatherApiClient.fetchWeatherData.mockResolvedValue(mockWeatherData);
+      mockWeatherClient.fetchWeatherData.mockResolvedValue(mockWeatherData);
 
       const result = await weatherService.getWeather(city);
 
-      expect(mockWeatherApiClient.fetchWeatherData).toHaveBeenCalledWith(city);
+      expect(mockWeatherClient.fetchWeatherData).toHaveBeenCalledWith(city);
       expect(result).toEqual({
         temperature: 20,
         humidity: 65,
@@ -52,9 +49,9 @@ describe('WeatherService', () => {
       });
     });
 
-    it('should handle errors from the weather API client', async () => {
+    it('should handle errors from the weather client', async () => {
       const city = 'InvalidCity';
-      mockWeatherApiClient.fetchWeatherData.mockRejectedValue(new Error('API Error'));
+      mockWeatherClient.fetchWeatherData.mockRejectedValue(new Error('API Error'));
 
       await expect(weatherService.getWeather(city)).rejects.toThrow('API Error');
     });

@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../../src/app.module';
-import { PrismaService } from '../../src/prisma/prisma.service';
-import { WeatherApiClient } from '../../src/weather/weather-api.client';
-import { mockWeatherApiClient } from '../mocks/weather-api.client.mock';
+import { AppModule } from 'src/app.module';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { setupTestApp } from './setup-test-app';
 import * as http from 'http';
+import { WeatherClient } from 'src/weather/weather-client';
+import { mockWeatherClient } from '../mocks/weather-client.mock';
 
 interface ApiResponse {
   message?: string;
@@ -24,8 +24,8 @@ describe('Subscription API Integration Tests', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(WeatherApiClient)
-      .useValue(mockWeatherApiClient)
+      .overrideProvider(WeatherClient)
+      .useValue(mockWeatherClient)
       .compile();
 
     app = moduleFixture.createNestApplication();

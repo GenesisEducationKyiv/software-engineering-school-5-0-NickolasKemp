@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class MockConfigService {
   private readonly configValues = {
     WEATHER_API_KEY: 'test-api-key',
+    OPENWEATHER_API_KEY: 'test-openweather-api-key',
     APP_URL: 'http://localhost:3000',
     SMTP_HOST: 'smtp.example.com',
     SMTP_PORT: 587,
