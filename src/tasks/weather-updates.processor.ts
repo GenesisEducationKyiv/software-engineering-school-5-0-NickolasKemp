@@ -4,6 +4,7 @@ import { Job } from 'bull';
 import { EmailService } from '../email/email.service';
 import { WeatherUpdateJob } from '../interfaces/task.interface';
 import { AbstractWeatherService } from '../interfaces/weather.interface';
+import { getErrorStack } from '../utils/error.utils';
 
 @Processor('weather-updates')
 export class WeatherUpdatesProcessor {
@@ -28,10 +29,10 @@ export class WeatherUpdatesProcessor {
         appUrl,
       });
       this.logger.log(`Weather update email sent to ${email} for ${city}`);
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(
         `Failed to process weather update for ${email}, city: ${city}`,
-        error.stack,
+        getErrorStack(error),
       );
       throw error;
     }
