@@ -1,9 +1,10 @@
 import { Process, Processor } from '@nestjs/bull';
-import { Logger, Inject } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Job } from 'bull';
 import { EmailService } from '../email/email.service';
 import { WeatherUpdateJob } from '../interfaces/task.interface';
 import { AbstractWeatherService } from '../interfaces/weather.interface';
+import { Logger } from 'src/infrastructure/logger';
 
 @Processor('weather-updates')
 export class WeatherUpdatesProcessor {
@@ -28,11 +29,8 @@ export class WeatherUpdatesProcessor {
         appUrl,
       });
       this.logger.log(`Weather update email sent to ${email} for ${city}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to process weather update for ${email}, city: ${city}`,
-        error.stack,
-      );
+    } catch (error: unknown) {
+      this.logger.error(`Failed to process weather update for ${email}, city: ${city}`, error);
       throw error;
     }
   }

@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException, Logger, Inject } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common';
 import { EmailService } from '../email/email.service';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,6 +6,7 @@ import { AbstractWeatherService } from '../interfaces/weather.interface';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { SubscriptionManager } from '../interfaces/subscription.interface';
 import { SubscriptionRepository } from './prisma-subscription.repository';
+import { Logger } from 'src/infrastructure/logger';
 
 @Injectable()
 export class SubscriptionService implements SubscriptionManager {
@@ -49,8 +50,8 @@ export class SubscriptionService implements SubscriptionManager {
       try {
         await this.emailService.sendConfirmationEmail(email, { token: confirmationToken, appUrl });
         this.logger.log(`Confirmation email sent to ${email}`);
-      } catch (emailError) {
-        this.logger.error(`Failed to send confirmation email to ${email}`, emailError.stack);
+      } catch (emailError: unknown) {
+        this.logger.error(`Failed to send confirmation email to ${email}`, emailError);
 
         await this.subscriptionRepository.delete(subscription.id);
         throw emailError;
@@ -59,8 +60,8 @@ export class SubscriptionService implements SubscriptionManager {
       this.logger.log(
         `Subscription created for ${email} with city ${city} and frequency ${frequency}`,
       );
-    } catch (error) {
-      this.logger.error(`Failed to create subscription for ${email}`, error.stack);
+    } catch (error: unknown) {
+      this.logger.error(`Failed to create subscription for ${email}`, error);
       throw error;
     }
   }
@@ -79,8 +80,8 @@ export class SubscriptionService implements SubscriptionManager {
       });
 
       this.logger.log(`Subscription confirmed for ${subscription.email}`);
-    } catch (error) {
-      this.logger.error(`Failed to confirm subscription with token ${token}`, error.stack);
+    } catch (error: unknown) {
+      this.logger.error(`Failed to confirm subscription with token ${token}`, error);
       throw error;
     }
   }
@@ -96,8 +97,8 @@ export class SubscriptionService implements SubscriptionManager {
       await this.subscriptionRepository.delete(subscription.id);
 
       this.logger.log(`Subscription deleted for ${subscription.email}`);
-    } catch (error) {
-      this.logger.error(`Failed to delete subscription with token ${token}`, error.stack);
+    } catch (error: unknown) {
+      this.logger.error(`Failed to delete subscription with token ${token}`, error);
       throw error;
     }
   }

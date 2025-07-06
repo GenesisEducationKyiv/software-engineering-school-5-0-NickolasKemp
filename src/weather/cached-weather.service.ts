@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Logger } from 'src/infrastructure/logger';
 import { WeatherData, AbstractWeatherService } from '../interfaces/weather.interface';
 import { WeatherService } from './weather.service';
 import { CacheService } from '../cache/cache.service';

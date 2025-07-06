@@ -2,6 +2,8 @@ import { Test } from '@nestjs/testing';
 import { WeatherUpdatesProcessor } from './weather-updates.processor';
 import { EmailService } from '../email/email.service';
 import { AbstractWeatherService } from '../interfaces/weather.interface';
+import { Job } from 'bull';
+import { WeatherUpdateJob } from 'src/interfaces/task.interface';
 
 describe('WeatherUpdatesProcessor', () => {
   let processor: WeatherUpdatesProcessor;
@@ -52,7 +54,7 @@ describe('WeatherUpdatesProcessor', () => {
 
       mockWeatherService.getWeather.mockResolvedValue(mockWeather);
 
-      await processor.processWeatherUpdate(mockJob as any);
+      await processor.processWeatherUpdate(mockJob as Job<WeatherUpdateJob>);
 
       expect(mockWeatherService.getWeather).toHaveBeenCalledWith('London');
       expect(mockEmailService.sendWeatherUpdate).toHaveBeenCalledWith('user@example.com', {
@@ -77,9 +79,9 @@ describe('WeatherUpdatesProcessor', () => {
 
       mockWeatherService.getWeather.mockRejectedValue(new Error('City not found'));
 
-      await expect(processor.processWeatherUpdate(mockJob as any)).rejects.toThrow(
-        'City not found',
-      );
+      await expect(
+        processor.processWeatherUpdate(mockJob as Job<WeatherUpdateJob>),
+      ).rejects.toThrow('City not found');
 
       expect(mockEmailService.sendWeatherUpdate).not.toHaveBeenCalled();
     });

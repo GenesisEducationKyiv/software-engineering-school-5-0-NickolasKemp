@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import axios from 'axios';
 import {
   WeatherData,
@@ -7,6 +7,7 @@ import {
 } from '../../interfaces/weather.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from '../weather-url-builder.service';
+import { Logger } from 'src/infrastructure/logger';
 
 @Injectable()
 export class OpenWeatherMapProvider implements WeatherProvider {
@@ -40,8 +41,8 @@ export class OpenWeatherMapProvider implements WeatherProvider {
         description: response.data.weather[0]?.description || 'Unknown',
       };
     } catch (error) {
-      this.weatherLogger.logProviderResponse(this.name, city, error, true);
-      this.logger.error(`Failed to fetch weather data for city: ${city}`, error.stack);
+      this.weatherLogger.logProviderResponse(this.name, city, error as Error, true);
+      this.logger.error(`Failed to fetch weather data for city: ${city}`, error);
       throw error;
     }
   }

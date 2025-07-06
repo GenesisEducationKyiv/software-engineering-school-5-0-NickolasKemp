@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { WeatherData, AbstractWeatherService } from '../interfaces/weather.interface';
 import { WeatherClient } from './weather-client';
+import { Logger } from 'src/infrastructure/logger';
 
 @Injectable()
 export class WeatherService implements AbstractWeatherService {
@@ -12,7 +13,7 @@ export class WeatherService implements AbstractWeatherService {
     try {
       return await this.weatherClient.fetchWeatherData(city);
     } catch (error) {
-      this.logger.error(`Failed to process weather data for city: ${city}`, error.stack);
+      this.logger.error(`Failed to process weather data for city: ${city}`, error);
       throw error;
     }
   }
