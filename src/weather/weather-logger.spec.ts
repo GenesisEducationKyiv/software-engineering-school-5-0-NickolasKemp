@@ -36,7 +36,10 @@ describe('WeatherLogger', () => {
     it('should log successful response to file', () => {
       const providerName = 'test-provider';
       const city = 'London';
-      const response = { temperature: 20, humidity: 60 };
+      const response = {
+        main: { temp: 20, humidity: 60 },
+        weather: [{ description: 'Clear sky' }],
+      };
 
       service.logProviderResponse(providerName, city, response);
 
@@ -62,7 +65,10 @@ describe('WeatherLogger', () => {
     it('should handle file write errors gracefully', () => {
       const providerName = 'test-provider';
       const city = 'London';
-      const response = { temperature: 20 };
+      const response = {
+        main: { temp: 20, humidity: 50 },
+        weather: [{ description: 'Cloudy' }],
+      };
 
       mockFs.appendFileSync.mockImplementation(() => {
         throw new Error('File write error');

@@ -11,8 +11,6 @@ export class WeatherService implements AbstractWeatherService {
 
   async getWeather(city: string): Promise<WeatherData> {
     try {
-      throw Error('TEST');
-
       return await this.weatherClient.fetchWeatherData(city);
     } catch (error) {
       this.logger.error(`Failed to process weather data for city: ${city}`, error);
