@@ -1,4 +1,4 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import {
@@ -8,7 +8,7 @@ import {
   EmailTemplate,
 } from '../interfaces/email.interface';
 import { generateConfirmationTemplate, generateWeatherUpdateTemplate } from './template-generator';
-import { getErrorStack } from '../utils/error.utils';
+import { Logger } from 'src/infrastructure/logger';
 
 interface SmtpError extends Error {
   code?: string;
@@ -35,7 +35,7 @@ export class EmailService implements EmailSender {
         },
       });
     } catch (error: unknown) {
-      this.logger.error('Failed to create email transporter', getErrorStack(error));
+      this.logger.error('Failed to create email transporter', error);
       throw error;
     }
   }
@@ -47,7 +47,7 @@ export class EmailService implements EmailSender {
         ...template,
       });
     } catch (error: unknown) {
-      this.logger.error(`Failed to send email to ${to}`, getErrorStack(error));
+      this.logger.error(`Failed to send email to ${to}`, error);
 
       const smtpError = error as SmtpError;
       if (smtpError.code === 'EENVELOPE' || smtpError.message?.includes('Invalid recipient')) {
@@ -64,7 +64,7 @@ export class EmailService implements EmailSender {
       await this.sendEmail(email, template);
       this.logger.log(`Confirmation email sent to ${email}`);
     } catch (error: unknown) {
-      this.logger.error(`Failed to send confirmation email to ${email}`, getErrorStack(error));
+      this.logger.error(`Failed to send confirmation email to ${email}`, error);
       throw error;
     }
   }
@@ -75,10 +75,7 @@ export class EmailService implements EmailSender {
       await this.sendEmail(email, template);
       this.logger.log(`Weather update sent to ${email} for ${data.city}`);
     } catch (error: unknown) {
-      this.logger.error(
-        `Failed to send weather update to ${email} for ${data.city}`,
-        getErrorStack(error),
-      );
+      this.logger.error(`Failed to send weather update to ${email} for ${data.city}`, error);
       throw error;
     }
   }
