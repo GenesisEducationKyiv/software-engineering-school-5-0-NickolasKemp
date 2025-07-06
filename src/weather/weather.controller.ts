@@ -1,12 +1,6 @@
-import {
-  Controller,
-  Get,
-  Query,
-  BadRequestException,
-  NotFoundException,
-  Logger,
-} from '@nestjs/common';
+import { Controller, Get, Query, BadRequestException, NotFoundException } from '@nestjs/common';
 import { AbstractWeatherService, WeatherData } from '../interfaces/weather.interface';
+import { Logger } from 'src/infrastructure/logger';
 
 @Controller('api/weather')
 export class WeatherController {
@@ -23,7 +17,7 @@ export class WeatherController {
     try {
       return await this.weatherService.getWeather(city);
     } catch (error) {
-      this.logger.error(`Error fetching weather for city: ${city}`, error.stack);
+      this.logger.error(`Error fetching weather for city: ${city}`, error);
       throw new NotFoundException('City not found or weather service unavailable');
     }
   }

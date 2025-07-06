@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { Logger } from 'src/infrastructure/logger';
 import { WeatherProvider, WeatherData } from '../interfaces/weather.interface';
 
 @Injectable()
@@ -14,8 +15,8 @@ export class WeatherClient {
         const data = await provider.fetchWeatherData(city);
         this.logger.log(`Successfully fetched weather data from ${provider.name}`);
         return data;
-      } catch (error) {
-        this.logger.warn(`Provider ${provider.name} failed for city: ${city}`, error.stack);
+      } catch {
+        this.logger.warn(`Provider ${provider.name} failed for city: ${city}`);
       }
     }
 
