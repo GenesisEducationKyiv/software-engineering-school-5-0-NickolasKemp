@@ -17,7 +17,7 @@ The optimal communication for the extracted services is:
 
 ## Diagram
 
-![Microservices Architecture](microservices.png)
+![Microservices Architecture](./images/microservices.png)
 
 ### Advantages
 
