@@ -44,3 +44,7 @@ export abstract class BaseWeatherHandler implements WeatherHandler {
     return null;
   }
 }
+
+export abstract class AbstractWeatherService {
+  abstract getWeather(city: string): Promise<WeatherData>;
+}

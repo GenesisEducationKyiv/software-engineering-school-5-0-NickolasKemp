@@ -6,14 +6,13 @@ import {
   NotFoundException,
   Logger,
 } from '@nestjs/common';
-import { WeatherService } from './weather.service';
-import { WeatherData } from '../interfaces/weather.interface';
+import { AbstractWeatherService, WeatherData } from '../interfaces/weather.interface';
 
 @Controller('api/weather')
 export class WeatherController {
   private readonly logger = new Logger(WeatherController.name);
 
-  constructor(private readonly weatherService: WeatherService) {}
+  constructor(private readonly weatherService: AbstractWeatherService) {}
 
   @Get()
   async getWeather(@Query('city') city: string): Promise<WeatherData> {

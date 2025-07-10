@@ -90,7 +90,7 @@ jobs:
           NODE_ENV: test
           REDIS_HOST: redis
           REDIS_PORT: 6379
-          WEATHER_API_KEY: 1a48b64e96174e409ce123137251705
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
           SMTP_HOST: smtp.gmail.com
           SMTP_PORT: 587
           SMTP_USER: ${{ secrets.SMTP_USER }}

@@ -7,17 +7,27 @@ import { WeatherLogger } from './weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { WeatherApiProvider } from './weather-providers/weather-api.provider';
 import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provider';
+import { CachedWeatherService } from './cached-weather.service';
+import { CacheModule } from '../cache/cache.module';
+import { MetricsService } from '../metrics/metrics.service';
+import { AbstractWeatherService } from '../interfaces/weather.interface';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, CacheModule],
   controllers: [WeatherController],
   providers: [
     WeatherService,
+    CachedWeatherService,
+    {
+      provide: AbstractWeatherService,
+      useClass: CachedWeatherService,
+    },
     WeatherClient,
     WeatherLogger,
     WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
+    MetricsService,
     {
       provide: 'OPENWEATHER_API_KEY',
       useFactory: (configService: ConfigService) =>
@@ -41,6 +51,6 @@ import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provi
       inject: [WeatherApiProvider, OpenWeatherMapProvider],
     },
   ],
-  exports: [WeatherService],
+  exports: [AbstractWeatherService],
 })
 export class WeatherModule {}
