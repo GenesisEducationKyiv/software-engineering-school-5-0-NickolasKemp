@@ -81,7 +81,7 @@
 
 ### 2.4 Layered Architecture Diagram (Onion)
 
-![Architecture Diagram](./images/architecture.png)
+![Architecture Diagram](./images/onion-arch.png)
 
 This architecture separates the system into distinct layers:
 
