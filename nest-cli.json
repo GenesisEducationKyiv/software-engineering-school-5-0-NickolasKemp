@@ -10,13 +10,13 @@
   "monorepo": true,
   "root": "apps/weather-api",
   "projects": {
-    "notfication-sender": {
+    "notification-sender": {
       "type": "application",
-      "root": "apps/notfication-sender",
+      "root": "apps/notification-sender",
       "entryFile": "main",
-      "sourceRoot": "apps/notfication-sender/src",
+      "sourceRoot": "apps/notification-sender/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/notfication-sender/tsconfig.app.json"
+        "tsConfigPath": "apps/notification-sender/tsconfig.app.json"
       }
     },
     "weather-api": {
