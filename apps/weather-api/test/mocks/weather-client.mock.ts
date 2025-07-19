@@ -1,4 +1,4 @@
-import { WeatherData } from 'src/domain/weather.interface';
+import { WeatherData } from 'src/weather/domain/weather.interface';
 
 export const mockWeatherClient = {
   fetchWeatherData: jest.fn().mockResolvedValue({

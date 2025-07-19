@@ -8,9 +8,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { WeatherModule } from './weather/infrastructure/weather.module';
-import { EmailModule } from './infrastructure/email-sender/email.module';
 import { SubscriptionModule } from './subscription/infrastructure/subscription.module';
-import { TasksModule } from './tasks/infrastructure/tasks.module';
+import { JobsModule } from './jobs/infrastructure/jobs.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
@@ -46,9 +45,8 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     }),
     PrismaModule,
     WeatherModule,
-    EmailModule,
     SubscriptionModule,
-    TasksModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { WeatherData, AbstractWeatherService } from '../../src/domain/weather.interface';
+import { WeatherData, AbstractWeatherService } from '../../src/weather/domain/weather.interface';
 
 @Injectable()
 export class MockWeatherService implements AbstractWeatherService {

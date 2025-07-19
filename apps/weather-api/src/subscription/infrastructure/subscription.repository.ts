@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import {
-  AbstractSubscriptionRepository,
-  CreateSubscriptionData,
-  UpdateSubscriptionData,
-} from '../../domain/subscription.interface';
+import { UpdateSubscriptionData } from '@subscription/domain-services/interfaces/subscription.interface';
+import { CreateSubscriptionData } from '@subscription/domain-services/interfaces/subscription.interface';
+import { AbstractSubscriptionRepository } from '../domain-services/interfaces/subscription.interface';
 
 @Injectable()
 export class PrismaSubscriptionRepository implements AbstractSubscriptionRepository {

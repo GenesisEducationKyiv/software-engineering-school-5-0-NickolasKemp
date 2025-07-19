@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SubscriptionService } from '../subscription.service';
-import { EmailSender } from '../../domain/email.interface';
+import { SubscriptionService } from '../domain-services/subscription.service';
+import { EmailSender } from '@notification-sender/domain-services/email-sender.interface';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { SubscriptionRepository } from '../infrastructure/prisma-subscription.repository';
 import { PrismaService } from '../../prisma/prisma.service';
-import { AbstractWeatherService } from '../../domain/weather.interface';
+import { AbstractWeatherService } from '../../weather/domain/weather.interface';
 
 jest.mock('uuid', () => ({
   v4: jest

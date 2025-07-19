@@ -1,8 +1,8 @@
 import { CachedWeatherService } from '../infrastructure/cached-weather.service';
-import { CacheService } from '../../infrastructure/cache/cache.service';
+import { CacheService } from '../../../../../shared/src/infrastructure/cache/cache.service';
 import { WeatherService } from '../domain-services/weather.service';
-import { MetricsService } from '../../infrastructure/metrics/metrics.service';
-import { WeatherData } from '../../domain/weather.interface';
+import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
+import { WeatherData } from '../domain/weather.interface';
 
 describe('CachedWeatherService', () => {
   let cachedWeatherService: CachedWeatherService;

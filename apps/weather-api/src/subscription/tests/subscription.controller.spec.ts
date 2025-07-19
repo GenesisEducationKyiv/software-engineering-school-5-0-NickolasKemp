@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { SubscriptionController } from '../app-services/subscription.controller';
-import { SubscriptionService } from '../subscription.service';
-import { CreateSubscriptionDto } from '../app-services/dto/create-subscription.dto';
+import { SubscriptionController } from '../application-services/subscription.controller';
+import { SubscriptionService } from '../domain-services/subscription.service';
+import { CreateSubscriptionDto } from '../application-services/dto/create-subscription.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { EmailService } from '../../infrastructure/email-sender/email.service';
+import { EmailService } from '../../../../../shared/src/infrastructure/email-sender/email.service';
 import { ConfigService } from '@nestjs/config';
 import { WeatherService } from '../../weather/domain-services/weather.service';
 

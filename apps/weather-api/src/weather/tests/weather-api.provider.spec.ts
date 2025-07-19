@@ -3,7 +3,7 @@ import axios from 'axios';
 import { WeatherApiProvider } from '../infrastructure/weather-providers/weather-api.provider';
 import { WeatherLogger } from '../infrastructure/weather-logger';
 import { WeatherUrlBuilderService } from '../infrastructure/weather-providers/weather-url-builder.service';
-import { WeatherApiResponse, WeatherData } from '../../domain/weather.interface';
+import { WeatherApiResponse, WeatherData } from '../domain/weather.interface';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

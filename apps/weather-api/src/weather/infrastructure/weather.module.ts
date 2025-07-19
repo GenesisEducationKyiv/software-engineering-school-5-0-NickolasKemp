@@ -8,9 +8,9 @@ import { WeatherUrlBuilderService } from './weather-providers/weather-url-builde
 import { WeatherApiProvider } from './weather-providers/weather-api.provider';
 import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provider';
 import { CachedWeatherService } from './cached-weather.service';
-import { CacheModule } from '../../infrastructure/cache/cache.module';
-import { MetricsService } from '../../infrastructure/metrics/metrics.service';
-import { AbstractWeatherService, WeatherProvider } from '../../domain/weather.interface';
+import { CacheModule } from '../../../../../shared/src/infrastructure/cache/cache.module';
+import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
+import { AbstractWeatherService, WeatherProvider } from '../domain/weather.interface';
 
 @Module({
   imports: [ConfigModule, CacheModule],

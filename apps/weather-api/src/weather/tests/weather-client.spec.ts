@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WeatherClient } from '../application-services/weather-client';
-import { WeatherProvider, WeatherData } from '../../domain/weather.interface';
+import { WeatherProvider, WeatherData } from '../domain/weather.interface';
 
 describe('WeatherClient', () => {
   let service: WeatherClient;

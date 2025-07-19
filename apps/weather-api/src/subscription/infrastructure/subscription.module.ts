@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { SubscriptionRepository } from './prisma-subscription.repository';
-import { AbstractSubscriptionRepository } from '../../domain/subscription.interface';
-import { SubscriptionController } from '../app-services/subscription.controller';
-import { SubscriptionService } from '../subscription.service';
-import { EmailModule } from '../../infrastructure/email-sender/email.module';
-import { WeatherModule } from '../../weather/infrastructure/weather.module';
+import { AbstractSubscriptionRepository } from '../domain-services/interfaces/subscription.interface';
+import { SubscriptionController } from '../application-services/subscription.controller';
+import { SubscriptionService } from '../domain-services/subscription.service';
+import { WeatherModule } from '@weather/infrastructure/weather.module';
 
 @Module({
-  imports: [PrismaModule, EmailModule, WeatherModule],
+  imports: [PrismaModule, WeatherModule],
   controllers: [SubscriptionController],
   providers: [
     SubscriptionService,
