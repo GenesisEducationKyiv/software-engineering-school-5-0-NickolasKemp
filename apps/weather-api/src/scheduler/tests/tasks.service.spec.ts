@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TasksService } from '../application-services/jobs.service';
+import { TasksService } from '../application-services/scheduler.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WeatherService } from '../../weather/domain-services/weather.service';
 import { EmailService } from '../../../../../shared/src/infrastructure/email-sender/email.service';

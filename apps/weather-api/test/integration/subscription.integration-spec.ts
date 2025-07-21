@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from 'src/app.module';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AppModule } from '../../src/app.module';
+import { PrismaService } from '../../src/prisma/prisma.service';
 import { setupTestApp } from './setup-test-app';
 import * as http from 'http';
-import { WeatherClient } from 'src/weather/application-services/weather-client';
+import { WeatherClient } from '../../src/weather/application-services/weather-client';
 import { mockWeatherClient } from '../mocks/weather-client.mock';
 
 interface ApiResponse {

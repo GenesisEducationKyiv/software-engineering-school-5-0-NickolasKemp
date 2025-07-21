@@ -6,7 +6,7 @@ import { AbstractSubscriptionService } from './interfaces/subscription.interface
 import { SubscriptionRepository } from '../infrastructure/prisma-subscription.repository';
 import { Logger } from '@shared/infrastructure/logger';
 import { WeatherFacade } from '@weather/public/weather.facade';
-import { NotificationSenderFacade } from '@notification-sender/public/notification-sender.facade';
+import { NotificationService } from '../application-services/notification.service';
 
 @Injectable()
 export class SubscriptionService implements AbstractSubscriptionService {
@@ -14,7 +14,7 @@ export class SubscriptionService implements AbstractSubscriptionService {
 
   constructor(
     private readonly subscriptionRepository: SubscriptionRepository,
-    private readonly notificationSenderFacade: NotificationSenderFacade,
+    private readonly notificationService: NotificationService,
     private readonly configService: ConfigService,
     private readonly weatherFacade: WeatherFacade,
   ) {}
@@ -48,9 +48,14 @@ export class SubscriptionService implements AbstractSubscriptionService {
       });
 
       try {
-        await this.notificationSenderFacade.sendConfirmationNotification(email, {
-          token: confirmationToken,
-          appUrl,
+        await this.notificationService.sendSubscriptionConfirmation({
+          to: email,
+          subject: 'Confirm your weather subscription',
+          template: 'confirmation',
+          context: {
+            token: confirmationToken,
+            appUrl,
+          },
         });
         this.logger.log(`Confirmation email sent to ${email}`);
       } catch (emailError: unknown) {

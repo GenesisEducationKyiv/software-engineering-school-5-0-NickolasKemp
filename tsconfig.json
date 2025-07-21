@@ -22,7 +22,7 @@
       "@notification-sender/*": ["apps/notification-sender/src/*"],
       "@weather/*": ["apps/weather-api/src/weather/*"],
       "@subscription/*": ["apps/weather-api/src/subscription/*"],
-      "@tasks/*": ["apps/weather-api/src/jobs/*"]
+      "@tasks/*": ["apps/weather-api/src/scheduler/*"]
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Query, BadRequestException, NotFoundException } from '@nestjs/common';
 import { AbstractWeatherService, WeatherData } from '../domain/weather.interface';
-import { Logger } from 'shared/src/infrastructure/logger';
+import { Logger } from '@shared/infrastructure/logger';
 
 @Controller('api/weather')
 export class WeatherController {

@@ -11,6 +11,7 @@ import { CachedWeatherService } from './cached-weather.service';
 import { CacheModule } from '../../../../../shared/src/infrastructure/cache/cache.module';
 import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
 import { AbstractWeatherService, WeatherProvider } from '../domain/weather.interface';
+import { WeatherFacade } from '../public/weather.facade';
 
 @Module({
   imports: [ConfigModule, CacheModule],
@@ -18,6 +19,7 @@ import { AbstractWeatherService, WeatherProvider } from '../domain/weather.inter
   providers: [
     WeatherService,
     CachedWeatherService,
+    WeatherFacade,
     {
       provide: AbstractWeatherService,
       useClass: CachedWeatherService,
@@ -53,6 +55,6 @@ import { AbstractWeatherService, WeatherProvider } from '../domain/weather.inter
       inject: ['WEATHER_PROVIDERS'],
     },
   ],
-  exports: [AbstractWeatherService],
+  exports: [AbstractWeatherService, WeatherFacade],
 })
 export class WeatherModule {}

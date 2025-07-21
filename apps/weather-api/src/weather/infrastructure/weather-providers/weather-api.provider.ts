@@ -3,7 +3,7 @@ import axios from 'axios';
 import { WeatherData, WeatherApiResponse, WeatherProvider } from '../../domain/weather.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
-import { Logger } from 'shared/src/infrastructure/logger';
+import { Logger } from '@shared/infrastructure/logger';
 
 @Injectable()
 export class WeatherApiProvider implements WeatherProvider {

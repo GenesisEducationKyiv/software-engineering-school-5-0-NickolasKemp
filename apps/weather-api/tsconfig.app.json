@@ -11,7 +11,8 @@
       "@domain/*": ["src/domain/*"],
       "@weather/*": ["src/weather/*"],
       "@subscription/*": ["src/subscription/*"],
-      "@tasks/*": ["src/tasks/*"]
+      "@tasks/*": ["src/tasks/*"],
+      "@shared/*": ["../../shared/src/*"]
     }
   },
   "include": ["src/**/*"],

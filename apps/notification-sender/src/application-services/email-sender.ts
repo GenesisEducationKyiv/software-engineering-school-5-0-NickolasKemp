@@ -7,7 +7,7 @@ import {
   EmailTemplate,
 } from './types/email.interface';
 import { generateConfirmationTemplate, generateWeatherUpdateTemplate } from './template-generator';
-import { Logger } from 'shared/src/infrastructure/logger';
+import { Logger } from '@shared/infrastructure/logger';
 import { EmailSender } from '../domain-services/email-sender.interface';
 
 interface SmtpError extends Error {
@@ -40,7 +40,7 @@ export class EmailService implements EmailSender {
     }
   }
 
-  private async sendEmail(to: string, template: EmailTemplate): Promise<void> {
+  private async sendEmailWithTemplate(to: string, template: EmailTemplate): Promise<void> {
     try {
       await this.transporter.sendMail({
         to,
@@ -61,7 +61,7 @@ export class EmailService implements EmailSender {
   async sendConfirmationEmail(email: string, data: ConfirmationEmailData): Promise<void> {
     try {
       const template = generateConfirmationTemplate(data);
-      await this.sendEmail(email, template);
+      await this.sendEmailWithTemplate(email, template);
       this.logger.log(`Confirmation email sent to ${email}`);
     } catch (error: unknown) {
       this.logger.error(`Failed to send confirmation email to ${email}`, error);
@@ -72,10 +72,38 @@ export class EmailService implements EmailSender {
   async sendWeatherUpdate(email: string, data: WeatherUpdateEmailData): Promise<void> {
     try {
       const template = generateWeatherUpdateTemplate(data);
-      await this.sendEmail(email, template);
+      await this.sendEmailWithTemplate(email, template);
       this.logger.log(`Weather update sent to ${email} for ${data.city}`);
     } catch (error: unknown) {
       this.logger.error(`Failed to send weather update to ${email} for ${data.city}`, error);
+      throw error;
+    }
+  }
+
+  async sendEmail(
+    to: string,
+    subject: string,
+    template: string,
+    context: Record<string, any>,
+  ): Promise<void> {
+    try {
+      let emailTemplate: EmailTemplate;
+
+      switch (template) {
+        case 'confirmation':
+          emailTemplate = generateConfirmationTemplate(context as ConfirmationEmailData);
+          break;
+        case 'weather-update':
+          emailTemplate = generateWeatherUpdateTemplate(context as WeatherUpdateEmailData);
+          break;
+        default:
+          throw new Error(`Unknown template: ${template}`);
+      }
+
+      await this.sendEmailWithTemplate(to, emailTemplate);
+      this.logger.log(`Email sent to ${to} with template ${template}`);
+    } catch (error: unknown) {
+      this.logger.error(`Failed to send email to ${to} with template ${template}`, error);
       throw error;
     }
   }

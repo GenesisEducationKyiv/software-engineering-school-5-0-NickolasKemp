@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { WeatherModule } from './weather/infrastructure/weather.module';
 import { SubscriptionModule } from './subscription/infrastructure/subscription.module';
-import { JobsModule } from './jobs/infrastructure/jobs.module';
+import { SchedulerModule } from './scheduler/infrastructure/scheduler.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
@@ -41,12 +41,12 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
+      rootPath: join(__dirname, '..', '..', '..', 'static'),
     }),
     PrismaModule,
     WeatherModule,
     SubscriptionModule,
-    JobsModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

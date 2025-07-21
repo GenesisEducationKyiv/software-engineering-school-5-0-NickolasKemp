@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Logger } from 'shared/src/infrastructure/logger';
+import { Logger } from '@shared/infrastructure/logger';
 import { WeatherProvider, WeatherData } from '../domain/weather.interface';
 
 @Injectable()
