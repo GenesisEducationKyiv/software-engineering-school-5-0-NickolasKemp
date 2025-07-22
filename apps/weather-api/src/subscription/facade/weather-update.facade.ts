@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@shared/infrastructure/logger';
 import { SubscriptionFacade } from './subscription.facade';
 import { NotificationService } from '../domain-services/notification.service';
-import { WeatherFacade } from '../../weather/public/weather.facade';
+import { WeatherFacade } from '../../weather/facade/weather.facade';
 
 interface SubscriptionLike {
   email: string;

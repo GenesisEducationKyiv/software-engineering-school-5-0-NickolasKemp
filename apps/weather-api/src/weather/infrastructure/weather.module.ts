@@ -12,7 +12,7 @@ import { CacheModule } from '../../../../../shared/src/infrastructure/cache/cach
 import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
 import { WeatherProvider } from '@weather/domain-services/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
-import { WeatherFacade } from '../public/weather.facade';
+import { WeatherFacade } from '../facade/weather.facade';
 
 @Module({
   imports: [ConfigModule, CacheModule],

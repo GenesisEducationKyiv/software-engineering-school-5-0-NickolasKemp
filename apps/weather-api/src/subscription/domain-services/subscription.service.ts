@@ -5,7 +5,7 @@ import { CreateSubscriptionDto } from '../application-services/dto/create-subscr
 import { AbstractSubscriptionService } from './interfaces/subscription.interface';
 import { SubscriptionRepository } from '../infrastructure/subscription.repository';
 import { Logger } from '@shared/infrastructure/logger';
-import { WeatherFacade } from '@weather/public/weather.facade';
+import { WeatherFacade } from '@weather/facade/weather.facade';
 import { NotificationService } from './notification.service';
 
 @Injectable()

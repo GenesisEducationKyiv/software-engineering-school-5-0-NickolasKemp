@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Logger } from '@shared/infrastructure/logger';
-import { WeatherUpdateFacade } from '@subscription/public/weather-update.facade';
+import { WeatherUpdateFacade } from '@subscription/facade/weather-update.facade';
 
 @Injectable()
 export class SchedulerService {
