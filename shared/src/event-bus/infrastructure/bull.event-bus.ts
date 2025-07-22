@@ -1,24 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
 import { Event, EventBus } from '../domain-services/event-bus.interface';
 import { Logger } from '@shared/infrastructure/logger';
 
-@Injectable()
 export class BullEventBus implements EventBus {
-  private readonly logger = new Logger(BullEventBus.name);
-
-  constructor(@InjectQueue('events') private eventsQueue: Queue) {}
-
-  async publish(event: Event): Promise<void> {
-    this.logger.log(`Publishing event: ${event.name}`);
-    await this.eventsQueue.add(event.name, event.payload);
+  protected readonly logger: Logger;
+  constructor(
+    protected readonly queue: Queue,
+    protected readonly queueName: string,
+  ) {
+    this.logger = new Logger(`${this.constructor.name}(${queueName})`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async subscribe(_event: Event, _callback: (event: Event) => void): Promise<void> {
-    // This method is not used in Bull implementation as we use processors instead
-    // The subscription is handled by Bull processors
-    this.logger.log(`Subscribing to event: ${_event.name}`);
+  async publish(event: Event): Promise<void> {
+    this.logger.log(`Publishing event: ${event.name} for queue: ${this.queueName}`);
+    await this.queue.add(event.name, event.payload);
+  }
+
+  subscribe(eventName: string, handler: (payload: unknown) => Promise<void>): void {
+    this.logger.log(`Subscribing to event: ${eventName} for queue: ${this.queueName}`);
+    void this.queue.process(eventName, async (job: Job<unknown>) => {
+      const payload = job.data;
+      await handler(payload);
+    });
+    this.logger.log(`Subscribed to event: ${eventName} for queue: ${this.queueName}`);
   }
 }

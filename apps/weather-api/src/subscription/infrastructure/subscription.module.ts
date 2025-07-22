@@ -7,8 +7,8 @@ import { SubscriptionService } from '../domain-services/subscription.service';
 import { SubscriptionFacade } from '../public/subscription.facade';
 import { WeatherUpdateFacade } from '../public/weather-update.facade';
 import { WeatherModule } from '@weather/infrastructure/weather.module';
-import { NotificationService } from '../application-services/notification.service';
-import { EventBusModule } from '@shared/event-bus/event-bus.module';
+import { NotificationService } from '../domain-services/notification.service';
+import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
 
 @Module({
   imports: [PrismaModule, WeatherModule, EventBusModule],

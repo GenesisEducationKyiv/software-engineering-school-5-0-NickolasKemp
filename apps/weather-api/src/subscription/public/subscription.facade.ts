@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AbstractSubscriptionRepository } from '../domain-services/interfaces/subscription.interface';
 import { Subscription } from '../domain/subscription.interface';
-import { NotificationService } from '../application-services/notification.service';
+import { NotificationService } from '../domain-services/notification.service';
 
 @Injectable()
 export class SubscriptionFacade {
@@ -19,26 +19,9 @@ export class SubscriptionFacade {
   }
 
   async sendConfirmationEmail(email: string, token: string): Promise<void> {
-    await this.notificationService.sendSubscriptionConfirmation({
-      to: email,
-      subject: 'Confirm your weather subscription',
-      template: 'confirmation',
-      context: {
-        token,
-        appUrl: this.configService.get<string>('APP_URL') || 'http://localhost:3000',
-      },
-    });
-  }
-
-  async sendUnsubscribeEmail(email: string, token: string): Promise<void> {
-    await this.notificationService.sendSubscriptionCancellation({
-      to: email,
-      subject: 'Subscription cancelled',
-      template: 'cancellation',
-      context: {
-        token,
-        appUrl: this.configService.get<string>('APP_URL') || 'http://localhost:3000',
-      },
+    await this.notificationService.sendSubscriptionConfirmation(email, {
+      token,
+      appUrl: this.configService.get<string>('APP_URL') || 'http://localhost:3000',
     });
   }
 }

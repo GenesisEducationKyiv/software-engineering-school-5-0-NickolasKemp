@@ -5,7 +5,7 @@ import { SchedulerService } from '../application-services/scheduler.service';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { WeatherModule } from '../../weather/infrastructure/weather.module';
 import { SubscriptionModule } from '@subscription/infrastructure/subscription.module';
-import { EventBusModule } from '@shared/event-bus/event-bus.module';
+import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
 
 @Module({
   imports: [

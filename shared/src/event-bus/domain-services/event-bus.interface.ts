@@ -1,9 +1,9 @@
 export interface Event {
   name: string;
-  payload: any;
+  payload: unknown;
 }
 
 export abstract class EventBus {
   abstract publish(event: Event): Promise<void>;
-  abstract subscribe(event: Event, callback: (event: Event) => void): Promise<void>;
+  abstract subscribe(eventName: string, handler: (payload: unknown) => Promise<void>): void;
 }

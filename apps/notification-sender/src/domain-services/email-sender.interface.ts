@@ -1,15 +1,5 @@
-import {
-  WeatherUpdateEmailData,
-  ConfirmationEmailData,
-} from '@notification-sender/application-services/types/email.interface';
+import { EmailTemplate } from '@notification-sender/application-services/types/email.interface';
 
-export abstract class EmailSender {
-  abstract sendWeatherUpdate(email: string, data: WeatherUpdateEmailData): Promise<void>;
-  abstract sendConfirmationEmail(email: string, data: ConfirmationEmailData): Promise<void>;
-  abstract sendEmail(
-    to: string,
-    subject: string,
-    template: string,
-    context: Record<string, any>,
-  ): Promise<void>;
+export abstract class AbstractEmailSender {
+  abstract sendEmail(to: string, template: EmailTemplate): Promise<void>;
 }
