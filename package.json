@@ -93,7 +93,12 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
+      "^src/(.*)$": "<rootDir>/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/src/$1",
+      "^@weather/(.*)$": "<rootDir>/apps/weather-api/src/weather/$1",
+      "^@subscription/(.*)$": "<rootDir>/apps/weather-api/src/subscription/$1",
+      "^@tasks/(.*)$": "<rootDir>/apps/weather-api/src/scheduler/$1",
+      "^@notification-sender/(.*)$": "<rootDir>/apps/notification-sender/src/$1"
     },
     "roots": [
       "<rootDir>/apps/"

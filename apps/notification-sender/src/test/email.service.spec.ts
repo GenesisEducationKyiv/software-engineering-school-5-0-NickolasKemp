@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import { EmailService } from '../application-services/email-sender';
-import { WeatherData } from '../infrastructure/weather/weather-http.service';
+import { EmailSender } from '../infrastructure/email/email-sender';
 
 jest.mock('nodemailer');
 
-describe('EmailService', () => {
-  let emailService: EmailService;
+describe('EmailSender', () => {
+  let emailService: EmailSender;
   const mockSendMail = jest.fn().mockImplementation(() => Promise.resolve());
   const mockCreateTransport = jest.fn().mockImplementation(() => ({
     sendMail: mockSendMail,
@@ -20,7 +19,7 @@ describe('EmailService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EmailService,
+        EmailSender,
         {
           provide: ConfigService,
           useValue: {
@@ -38,7 +37,7 @@ describe('EmailService', () => {
       ],
     }).compile();
 
-    emailService = module.get<EmailService>(EmailService);
+    emailService = module.get<EmailSender>(EmailSender);
   });
 
   it('should be defined', () => {
@@ -57,64 +56,38 @@ describe('EmailService', () => {
     });
   });
 
-  describe('sendConfirmationEmail', () => {
-    it('should send a confirmation email with correct parameters', async () => {
+  describe('sendEmail', () => {
+    it('should send an email with correct parameters', async () => {
       const email: string = 'test@example.com';
-      const token: string = 'test-token';
-      const appUrl: string = 'http://localhost:3000';
+      const template = {
+        subject: 'Test Subject',
+        text: 'Test text content',
+        html: '<p>Test HTML content</p>',
+      };
 
-      await emailService.sendConfirmationEmail(email, { token, appUrl });
+      await emailService.sendEmail(email, template);
 
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: email,
-          subject: 'Confirm Your Weather Subscription',
-          text: expect.stringContaining(token) as string,
-          html: expect.stringContaining(token) as string,
+          subject: 'Test Subject',
+          text: 'Test text content',
+          html: '<p>Test HTML content</p>',
         }),
       );
     });
 
     it('should propagate errors from the mail transport', async () => {
       const email = 'test@example.com';
-      const token = 'test-token';
-      const appUrl = 'http://localhost:3000';
+      const template = {
+        subject: 'Test Subject',
+        text: 'Test text content',
+        html: '<p>Test HTML content</p>',
+      };
 
       mockSendMail.mockRejectedValueOnce(new Error('SMTP error'));
 
-      await expect(emailService.sendConfirmationEmail(email, { token, appUrl })).rejects.toThrow(
-        'SMTP error',
-      );
-    });
-  });
-
-  describe('sendWeatherUpdate', () => {
-    it('should send a weather update email with correct parameters', async () => {
-      const email = 'test@example.com';
-      const city = 'London';
-      const weather: WeatherData = {
-        temperature: 20,
-        humidity: 65,
-        description: 'Partly cloudy',
-      };
-      const token = 'unsub-token';
-      const appUrl = 'http://localhost:3000';
-
-      await emailService.sendWeatherUpdate(email, {
-        city,
-        weather,
-        unsubscribeToken: token,
-        appUrl,
-      });
-
-      expect(mockSendMail).toHaveBeenCalledWith(
-        expect.objectContaining({
-          to: email,
-          subject: `Weather Update for ${city}`,
-          text: expect.stringContaining('Temperature: 20°C') as string,
-          html: expect.stringContaining('Temperature:</strong> 20°C') as string,
-        }),
-      );
+      await expect(emailService.sendEmail(email, template)).rejects.toThrow('SMTP error');
     });
   });
 });

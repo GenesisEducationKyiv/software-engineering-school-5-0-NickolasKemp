@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherController } from '../application-services/weather.controller';
-import { AbstractWeatherService } from '../domain/weather.interface';
+import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 
 describe('WeatherController', () => {
   let weatherController: WeatherController;

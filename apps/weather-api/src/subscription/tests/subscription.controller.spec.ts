@@ -4,7 +4,6 @@ import { SubscriptionController } from '../application-services/subscription.con
 import { SubscriptionService } from '../domain-services/subscription.service';
 import { CreateSubscriptionDto } from '../application-services/dto/create-subscription.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { EmailService } from '../../../../../shared/src/infrastructure/email-sender/email.service';
 import { ConfigService } from '@nestjs/config';
 import { WeatherService } from '../../weather/domain-services/weather.service';
 
@@ -26,10 +25,6 @@ describe('SubscriptionController', () => {
         },
         {
           provide: PrismaService,
-          useValue: {},
-        },
-        {
-          provide: EmailService,
           useValue: {},
         },
         {

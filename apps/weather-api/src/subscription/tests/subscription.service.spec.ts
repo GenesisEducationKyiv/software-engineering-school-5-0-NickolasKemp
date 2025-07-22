@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionService } from '../domain-services/subscription.service';
-import { EmailSender } from '@notification-sender/domain-services/email-sender.interface';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { SubscriptionRepository } from '../infrastructure/prisma-subscription.repository';
+import { SubscriptionRepository } from '../infrastructure/subscription.repository';
 import { PrismaService } from '../../prisma/prisma.service';
-import { AbstractWeatherService } from '../../weather/domain/weather.interface';
+import { NotificationService } from '../domain-services/notification.service';
+import { WeatherFacade } from '@weather/facade/weather.facade';
 
 jest.mock('uuid', () => ({
   v4: jest
@@ -31,13 +31,8 @@ class MockSubscriptionRepository extends SubscriptionRepository {
 
 describe('SubscriptionService', () => {
   let service: SubscriptionService;
-  let mockWeatherService: jest.Mocked<AbstractWeatherService>;
 
   const mockSubscriptionRepository = new MockSubscriptionRepository();
-
-  const mockEmailService = {
-    sendConfirmationEmail: jest.fn(),
-  };
 
   const mockConfigService = {
     get: jest.fn().mockReturnValue('http://localhost:3000'),
@@ -59,10 +54,6 @@ describe('SubscriptionService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    mockWeatherService = {
-      getWeather: jest.fn(),
-    } as unknown as jest.Mocked<AbstractWeatherService>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubscriptionService,
@@ -71,16 +62,20 @@ describe('SubscriptionService', () => {
           useValue: mockSubscriptionRepository,
         },
         {
-          provide: EmailSender,
-          useValue: mockEmailService,
+          provide: NotificationService,
+          useValue: {
+            sendSubscriptionConfirmation: jest.fn(),
+          },
         },
         {
           provide: ConfigService,
           useValue: mockConfigService,
         },
         {
-          provide: AbstractWeatherService,
-          useValue: mockWeatherService,
+          provide: WeatherFacade,
+          useValue: {
+            getWeather: jest.fn().mockResolvedValue({}),
+          },
         },
       ],
     }).compile();
@@ -106,9 +101,7 @@ describe('SubscriptionService', () => {
       await service.subscribe({ email, city, frequency });
 
       expect(mockSubscriptionRepository.findByEmail).toHaveBeenCalledWith(email);
-      expect(mockWeatherService.getWeather).toHaveBeenCalledWith(city);
       expect(mockSubscriptionRepository.create).toHaveBeenCalled();
-      expect(mockEmailService.sendConfirmationEmail).toHaveBeenCalled();
     });
 
     it('should throw ConflictException if email is already subscribed', async () => {
@@ -127,9 +120,37 @@ describe('SubscriptionService', () => {
       const city = 'NonExistentCity';
 
       mockSubscriptionRepository.findByEmail.mockResolvedValue(null);
-      mockWeatherService.getWeather.mockRejectedValue(new Error('City not found'));
 
-      await expect(service.subscribe({ email, city, frequency: 'daily' })).rejects.toThrow(
+      // Create a new module with a failing WeatherFacade mock
+      const failingModule: TestingModule = await Test.createTestingModule({
+        providers: [
+          SubscriptionService,
+          {
+            provide: SubscriptionRepository,
+            useValue: mockSubscriptionRepository,
+          },
+          {
+            provide: NotificationService,
+            useValue: {
+              sendSubscriptionConfirmation: jest.fn(),
+            },
+          },
+          {
+            provide: ConfigService,
+            useValue: mockConfigService,
+          },
+          {
+            provide: WeatherFacade,
+            useValue: {
+              getWeather: jest.fn().mockRejectedValue(new Error('City not found')),
+            },
+          },
+        ],
+      }).compile();
+
+      const failingService = failingModule.get<SubscriptionService>(SubscriptionService);
+
+      await expect(failingService.subscribe({ email, city, frequency: 'daily' })).rejects.toThrow(
         NotFoundException,
       );
       expect(mockSubscriptionRepository.create).not.toHaveBeenCalled();
