@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus } from '@shared/event-bus/domain-services/event-bus.interface';
 import {
   WeatherUpdateNotificationPayload,
   NotificationEvent,
   WeatherUpdateNotificationEvent,
   SubscriptionConfirmationNotificationEvent,
+  SubscriptionConfirmationNotificationPayload,
 } from '@shared/event-bus/domain-services/notification/notification.event';
+import { NotificationEventBus } from '@shared/event-bus/infrastructure/notification-event-bus';
 import { Logger } from '@shared/infrastructure/logger';
 
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
 
-  constructor(private readonly eventBus: EventBus) {}
+  constructor(private readonly eventBus: NotificationEventBus) {}
 
   async sendWeatherUpdate(
     to: string,
@@ -24,8 +25,6 @@ export class NotificationService {
       name: NotificationEvent.WEATHER_UPDATE,
       payload: {
         to,
-        subject: 'Weather Update',
-        template: 'weather-update',
         context,
       },
     };
@@ -35,7 +34,7 @@ export class NotificationService {
 
   async sendSubscriptionConfirmation(
     to: string,
-    context: { token: string; appUrl: string },
+    context: SubscriptionConfirmationNotificationPayload['context'],
   ): Promise<void> {
     this.logger.log(`Sending subscription confirmation to ${to}`);
 
@@ -43,8 +42,6 @@ export class NotificationService {
       name: NotificationEvent.SUBSCRIPTION_CONFIRMATION,
       payload: {
         to,
-        subject: 'Confirm your weather subscription',
-        template: 'confirmation',
         context,
       },
     };

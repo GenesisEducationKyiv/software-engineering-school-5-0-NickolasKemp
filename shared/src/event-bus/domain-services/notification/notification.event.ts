@@ -9,8 +9,6 @@ export enum NotificationEvent {
 
 export interface NotificationEventPayload {
   to: string;
-  subject: string;
-  template: string;
   context: Record<string, unknown>;
 }
 
