@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Logger } from '@shared/infrastructure/logger';
 import * as fs from 'fs';
 import * as path from 'path';
-import { OpenWeatherMapResponse, WeatherApiResponse } from '../domain/weather.interface';
+import { OpenWeatherMapResponse } from './weather-providers/weather-providers.interface';
+import { WeatherApiResponse } from './weather-providers/weather-providers.interface';
 
 @Injectable()
 export class WeatherLogger {

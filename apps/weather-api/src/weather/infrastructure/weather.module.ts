@@ -10,7 +10,8 @@ import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provi
 import { CachedWeatherService } from './cached-weather.service';
 import { CacheModule } from '../../../../../shared/src/infrastructure/cache/cache.module';
 import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
-import { AbstractWeatherService, WeatherProvider } from '../domain/weather.interface';
+import { WeatherProvider } from '@weather/domain-services/weather.interface';
+import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { WeatherFacade } from '../public/weather.facade';
 
 @Module({

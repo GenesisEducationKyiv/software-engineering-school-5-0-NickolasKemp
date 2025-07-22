@@ -12,7 +12,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/weather-api/main",
-    "start:all": "yarn build && concurrently \"yarn start:dev\" \"yarn start:notification-sender\"",
+    "start:all": "concurrently \"yarn start:dev weather-api\" \"yarn start:dev notification-sender\" &&  yarn build ",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

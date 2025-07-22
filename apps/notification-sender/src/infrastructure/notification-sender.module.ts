@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { NotificationSenderController } from '../notification-sender.controller';
+import { NotificationSenderController } from '../application-services/notification-sender.controller';
 import { NotificationSenderService } from '../domain-services/notification-sender.service';
 import { BullModule } from '@nestjs/bull';
 import { NotificationHandler } from '../application-services/event-handlers/notification.handler';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../prisma/prisma.module';
-import { SubscriptionRepository } from './prisma-subscription.repository';
+import { SubscriptionRepository } from './subscription.repository';
 import { AbstractSubscriptionRepository } from '../domain-services/interfaces/subscription.interface';
 import { SubscriptionController } from '../application-services/subscription.controller';
 import { SubscriptionService } from '../domain-services/subscription.service';

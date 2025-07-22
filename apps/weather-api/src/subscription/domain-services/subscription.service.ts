@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateSubscriptionDto } from '../application-services/dto/create-subscription.dto';
 import { AbstractSubscriptionService } from './interfaces/subscription.interface';
-import { SubscriptionRepository } from '../infrastructure/prisma-subscription.repository';
+import { SubscriptionRepository } from '../infrastructure/subscription.repository';
 import { Logger } from '@shared/infrastructure/logger';
 import { WeatherFacade } from '@weather/public/weather.facade';
 import { NotificationService } from './notification.service';

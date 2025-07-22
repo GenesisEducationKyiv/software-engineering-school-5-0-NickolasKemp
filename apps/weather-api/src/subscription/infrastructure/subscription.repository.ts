@@ -5,7 +5,7 @@ import { CreateSubscriptionData } from '@subscription/domain-services/interfaces
 import { AbstractSubscriptionRepository } from '../domain-services/interfaces/subscription.interface';
 
 @Injectable()
-export class PrismaSubscriptionRepository implements AbstractSubscriptionRepository {
+export class SubscriptionRepository implements AbstractSubscriptionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string) {

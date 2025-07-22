@@ -1,6 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import axios from 'axios';
-import { WeatherData, WeatherApiResponse, WeatherProvider } from '../../domain/weather.interface';
+import { WeatherData } from '../../domain/weather.interface';
+import { WeatherProvider } from '@weather/domain-services/weather.interface';
+import { WeatherApiResponse } from './weather-providers.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { Logger } from '@shared/infrastructure/logger';

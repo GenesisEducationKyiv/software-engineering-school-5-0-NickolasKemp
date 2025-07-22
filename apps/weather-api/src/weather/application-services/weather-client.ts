@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@shared/infrastructure/logger';
-import { WeatherProvider, WeatherData } from '../domain/weather.interface';
+import { WeatherData } from '../domain/weather.interface';
+import { WeatherProvider } from '@weather/domain-services/weather.interface';
 
 @Injectable()
-export class WeatherClient {
+export class WeatherClient implements WeatherProvider {
+  name = 'AnyWeatherProvider';
   private readonly logger = new Logger(WeatherClient.name);
 
   constructor(private readonly providers: WeatherProvider[]) {}
