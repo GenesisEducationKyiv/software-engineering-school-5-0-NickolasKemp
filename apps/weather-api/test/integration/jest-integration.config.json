@@ -4,10 +4,21 @@
   "testEnvironment": "node",
   "testRegex": ".integration-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": "tsconfig.json"
+      }
+    ]
   },
   "moduleNameMapper": {
-    "^src/(.*)$": "<rootDir>/../../src/$1"
+    "^src/(.*)$": "<rootDir>/../../src/$1",
+    "^@/(.*)$": "<rootDir>/../../src/$1",
+    "^@shared/(.*)$": "<rootDir>/../../../../shared/src/$1",
+    "^@weather/(.*)$": "<rootDir>/../../src/weather/$1",
+    "^@subscription/(.*)$": "<rootDir>/../../src/subscription/$1",
+    "^@notification-sender/(.*)$": "<rootDir>/../../../notification-sender/src/$1"
   },
-  "setupFilesAfterEnv": ["<rootDir>/setup-test-app.ts"]
+  "setupFilesAfterEnv": ["<rootDir>/setup-test-app.ts"],
+  "moduleDirectories": ["node_modules", "src", "../../shared/src"]
 }
