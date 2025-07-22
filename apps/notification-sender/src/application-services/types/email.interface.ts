@@ -1,4 +1,4 @@
-import { WeatherData } from '../../../../weather-api/src/weather/domain/weather.interface';
+import { WeatherData } from '@weather/domain/weather.interface';
 
 export interface WeatherUpdateEmailData {
   city: string;
