@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { SubscriptionRepository } from '../infrastructure/subscription.repository';
 import { PrismaService } from '../../prisma/prisma.service';
-import { NotificationService } from '../domain-services/notification.service';
+import { EventPublisherService } from '../domain-services/event-publisher.service';
 import { WeatherFacade } from '@weather/facade/weather.facade';
 
 jest.mock('uuid', () => ({
@@ -62,7 +62,7 @@ describe('SubscriptionService', () => {
           useValue: mockSubscriptionRepository,
         },
         {
-          provide: NotificationService,
+          provide: EventPublisherService,
           useValue: {
             sendSubscriptionConfirmation: jest.fn(),
           },
@@ -130,7 +130,7 @@ describe('SubscriptionService', () => {
             useValue: mockSubscriptionRepository,
           },
           {
-            provide: NotificationService,
+            provide: EventPublisherService,
             useValue: {
               sendSubscriptionConfirmation: jest.fn(),
             },

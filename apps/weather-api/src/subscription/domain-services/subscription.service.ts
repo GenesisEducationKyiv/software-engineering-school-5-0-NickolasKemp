@@ -6,7 +6,7 @@ import { AbstractSubscriptionService } from './interfaces/subscription.interface
 import { SubscriptionRepository } from '../infrastructure/subscription.repository';
 import { Logger } from '@shared/infrastructure/logger';
 import { WeatherFacade } from '@weather/facade/weather.facade';
-import { NotificationService } from './notification.service';
+import { EventPublisherService } from './event-publisher.service';
 
 @Injectable()
 export class SubscriptionService implements AbstractSubscriptionService {
@@ -14,7 +14,7 @@ export class SubscriptionService implements AbstractSubscriptionService {
 
   constructor(
     private readonly subscriptionRepository: SubscriptionRepository,
-    private readonly notificationService: NotificationService,
+    private readonly eventPublisherService: EventPublisherService,
     private readonly configService: ConfigService,
     private readonly weatherFacade: WeatherFacade,
   ) {}
@@ -48,7 +48,7 @@ export class SubscriptionService implements AbstractSubscriptionService {
       });
 
       try {
-        await this.notificationService.sendSubscriptionConfirmation(email, {
+        await this.eventPublisherService.sendSubscriptionConfirmation(email, {
           token: confirmationToken,
           appUrl,
         });

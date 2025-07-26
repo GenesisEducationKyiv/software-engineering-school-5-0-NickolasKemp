@@ -16,7 +16,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/notification-sender/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/notification-sender/tsconfig.app.json"
+        "tsConfigPath": "apps/notification-sender/tsconfig.app.json",
+        "assets": ["templates/**/*"]
       }
     },
     "weather-api": {

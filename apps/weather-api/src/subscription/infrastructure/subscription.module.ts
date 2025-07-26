@@ -7,7 +7,7 @@ import { SubscriptionService } from '../domain-services/subscription.service';
 import { SubscriptionFacade } from '../facade/subscription.facade';
 import { WeatherUpdateFacade } from '../facade/weather-update.facade';
 import { WeatherModule } from '@weather/infrastructure/weather.module';
-import { NotificationService } from '../domain-services/notification.service';
+import { EventPublisherService } from '../domain-services/event-publisher.service';
 import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
 
 @Module({
@@ -16,7 +16,7 @@ import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.modul
   providers: [
     SubscriptionService,
     SubscriptionRepository,
-    NotificationService,
+    EventPublisherService,
     SubscriptionFacade,
     WeatherUpdateFacade,
     {

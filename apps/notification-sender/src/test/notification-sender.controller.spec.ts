@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationSenderController } from '../notification-sender.controller';
+import { NotificationSenderController } from '../application-services/notification-sender.controller';
 import { NotificationSenderService } from '../domain-services/notification-sender.service';
 import { AbstractEmailSender } from '../domain-services/email-sender.interface';
 

@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { NotificationEventBus } from './notification-event-bus';
+import { EventBusSubscriptionTopic } from './subscription-topic';
 import { EventBus } from '../domain-services/event-bus.interface';
-import { NOTIFICATION_EVENT_GROUP } from '../domain-services/notification/notification.event';
+import { SUBSCRIPTION_EVENT_GROUP } from '../domain-services/subscription/subscription.event';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: NOTIFICATION_EVENT_GROUP,
+      name: SUBSCRIPTION_EVENT_GROUP,
     }),
   ],
   providers: [
-    NotificationEventBus,
+    EventBusSubscriptionTopic,
     {
       provide: EventBus,
-      useExisting: NotificationEventBus,
+      useExisting: EventBusSubscriptionTopic,
     },
   ],
-  exports: [NotificationEventBus, EventBus],
+  exports: [EventBusSubscriptionTopic, EventBus],
 })
 export class EventBusModule {}

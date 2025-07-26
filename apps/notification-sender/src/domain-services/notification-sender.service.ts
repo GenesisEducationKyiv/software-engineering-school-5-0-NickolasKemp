@@ -6,7 +6,7 @@ import {
 import {
   generateConfirmationTemplate,
   generateWeatherUpdateTemplate,
-} from '@notification-sender/application-services/template-generator';
+} from '@notification-sender/application-services/email/template-generator';
 import { AbstractEmailSender } from '@notification-sender/domain-services/email-sender.interface';
 
 @Injectable()

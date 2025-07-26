@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && yarn notification-sender:public",
+    "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"shared/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -20,8 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config apps/weather-api/test/e2e/jest-e2e.json",
     "test:integration": "jest --config apps/weather-api/test/integration/jest-integration.config.json --runInBand",
-    "test:integration:docker": "docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit",
-    "notification-sender:public": "cp -r apps/notification-sender/src/templates dist/apps/notification-sender/"
+    "test:integration:docker": "docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit"
   },
   "dependencies": {
     "@nestjs/bull": "^11.0.2",
