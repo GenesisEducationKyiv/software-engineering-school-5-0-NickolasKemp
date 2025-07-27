@@ -1,8 +1,10 @@
-version: '3.8'
-
 services:
   app:
     build: .
+    container_name: weather-api
+    labels:
+      logging: 'promtail'
+      logging_jobname: 'weather-api'
     ports:
       - '3000:3000'
     environment:
@@ -15,6 +17,9 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - APP_URL=http://localhost:3000
+      - GRAFANA_URL=http://grafana:3000
+      - LOKI_URL=http://loki:3100
+      - PROMTAIL_URL=http://promtail:3100
     depends_on:
       - postgres
       - redis
@@ -40,6 +45,42 @@ services:
     volumes:
       - redis-data:/data
 
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3001:3000'
+    depends_on:
+      - loki
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - ./logs:/app/logs
+      - ./promtail-config.yml:/etc/promtail/config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
 volumes:
   postgres-data:
-  redis-data: 
+  redis-data:
+  grafana-storage:
+  loki-data:
