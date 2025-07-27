@@ -6,7 +6,7 @@ import {
   ConfirmationSubscriptionPayload,
   WeatherUpdateSubscriptionPayload,
 } from '@shared/event-bus/domain-services/subscription/subscription.event';
-import { AbstractSubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription/subscription-handler.interface';
+import { SubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription.handler';
 
 @Injectable()
 export class NotificationEventSubscriber implements OnModuleInit {
@@ -14,7 +14,7 @@ export class NotificationEventSubscriber implements OnModuleInit {
 
   constructor(
     private readonly subscriptionTopic: EventBusSubscriptionTopic,
-    private readonly subscriptionHandler: AbstractSubscriptionHandler,
+    private readonly subscriptionHandler: SubscriptionHandler,
   ) {}
 
   onModuleInit(): void {

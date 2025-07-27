@@ -1,23 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { Logger } from '@shared/infrastructure/logger';
+import { Injectable, Logger } from '@nestjs/common';
 import {
-  ConfirmationSubscriptionPayload,
   WeatherUpdateSubscriptionPayload,
+  ConfirmationSubscriptionPayload,
 } from '@shared/event-bus/domain-services/subscription/subscription.event';
-import { SubscriptionHandler } from './subscription.handler';
-import { AbstractSubscriptionHandler } from './subscription-handler.interface';
+import { NotificationSenderService } from '@notification-sender/domain-services/notification-sender.service';
 
 @Injectable()
-export class LoggedSubscriptionHandler implements AbstractSubscriptionHandler {
-  private readonly logger = new Logger(LoggedSubscriptionHandler.name);
+export class SubscriptionHandler {
+  private readonly logger = new Logger(SubscriptionHandler.name);
 
-  constructor(private readonly subscriptionHandler: SubscriptionHandler) {}
+  constructor(private readonly notificationSenderService: NotificationSenderService) {}
 
   async handleSubscriptionConfirmation(payload: ConfirmationSubscriptionPayload): Promise<void> {
-    const { to } = payload;
+    const { to, context } = payload;
     this.logger.log(`Processing subscription confirmation for ${to}`);
     try {
-      await this.subscriptionHandler.handleSubscriptionConfirmation(payload);
+      await this.notificationSenderService.sendConfirmationEmail(to, context);
       this.logger.log(`Subscription confirmation email sent to ${to}`);
     } catch (error: unknown) {
       this.logger.error(`Failed to process subscription confirmation for ${to}`, error);
@@ -29,7 +27,7 @@ export class LoggedSubscriptionHandler implements AbstractSubscriptionHandler {
     const { to, context } = payload;
     this.logger.log(`Processing weather update for ${to}, city: ${context.city}`);
     try {
-      await this.subscriptionHandler.handleWeatherUpdate(payload);
+      await this.notificationSenderService.sendWeatherUpdateEmail(to, context);
       this.logger.log(`Weather update email sent to ${to} for ${context.city}`);
     } catch (error: unknown) {
       this.logger.error(`Failed to process weather update for ${to}, city: ${context.city}`, error);

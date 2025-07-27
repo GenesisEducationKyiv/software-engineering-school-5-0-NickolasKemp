@@ -3,12 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NotificationSenderController } from '../application-services/notification-sender.controller';
 import { NotificationSenderService } from '../domain-services/notification-sender.service';
 import { BullModule } from '@nestjs/bull';
-import { LoggedSubscriptionHandler } from '../application-services/event-handlers/subscription/logged-subscription.handler';
 import { NotificationEventSubscriber } from './event-subscribers/subscription.subscriber';
 import { EmailModule } from './email/email.module';
 import { SUBSCRIPTION_EVENT_GROUP } from '@shared/event-bus/domain-services/subscription/subscription.event';
 import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
-import { AbstractSubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription/subscription-handler.interface';
+import { SubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription.handler';
 
 @Module({
   imports: [
@@ -39,14 +38,6 @@ import { AbstractSubscriptionHandler } from '@notification-sender/application-se
     EventBusModule,
   ],
   controllers: [NotificationSenderController],
-  providers: [
-    NotificationSenderService,
-    LoggedSubscriptionHandler,
-    {
-      provide: AbstractSubscriptionHandler,
-      useClass: LoggedSubscriptionHandler,
-    },
-    NotificationEventSubscriber,
-  ],
+  providers: [NotificationSenderService, SubscriptionHandler, NotificationEventSubscriber],
 })
 export class NotificationSenderModule {}
