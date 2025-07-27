@@ -1,5 +1,3 @@
-import { WeatherData } from '@weather/domain/weather.interface';
-
 export const SUBSCRIPTION_EVENT_GROUP = 'subscription';
 
 export enum SubscriptionEvent {
@@ -13,6 +11,12 @@ export interface SubscriptionEventPayload {
 }
 
 // #region Weather Update Notification
+
+interface WeatherData {
+  humidity: number;
+  temperature: number;
+  description: string;
+}
 
 export interface WeatherUpdateSubscriptionPayload extends SubscriptionEventPayload {
   context: {
