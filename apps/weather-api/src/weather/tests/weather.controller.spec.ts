@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherController } from '../application-services/weather.controller';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
+import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
 
 describe('WeatherController', () => {
   let weatherController: WeatherController;
@@ -22,6 +23,13 @@ describe('WeatherController', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn(() => 'test-api-key'),
+          },
+        },
+        {
+          provide: MetricsService,
+          useValue: {
+            recordHttpRequest: jest.fn(),
+            recordHttpRequestDuration: jest.fn(),
           },
         },
       ],
