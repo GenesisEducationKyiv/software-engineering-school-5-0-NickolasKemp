@@ -19,13 +19,15 @@ export class CachedWeatherService implements AbstractWeatherService {
   async getWeather(city: string): Promise<WeatherData> {
     const cacheKey = `weather:${city.toLowerCase()}`;
     const cached = await this.cacheService.get<WeatherData>(cacheKey);
+
     if (cached) {
       this.logger.log(`Cache hit for city: ${city}`);
-      this.metricsService.incHit();
+      this.metricsService.recordCacheHit();
       return cached;
     }
+
     this.logger.log(`Cache miss for city: ${city}`);
-    this.metricsService.incMiss();
+    this.metricsService.recordCacheMiss();
     const data = await this.weatherService.getWeather(city);
     await this.cacheService.set(cacheKey, data, 300);
     return data;

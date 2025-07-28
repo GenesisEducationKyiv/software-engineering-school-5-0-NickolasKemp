@@ -4,6 +4,7 @@ import * as nodemailer from 'nodemailer';
 import { EmailTemplate } from '../../application-services/types/email.interface';
 import { Logger } from '@shared/infrastructure/logger';
 import { AbstractEmailSender } from '@notification-sender/domain-services/email-sender.interface';
+import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
 
 interface SmtpError extends Error {
   code?: string;
@@ -14,7 +15,10 @@ export class EmailSender implements AbstractEmailSender {
   private transporter: nodemailer.Transporter;
   private readonly logger = new Logger(EmailSender.name);
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly metricsService: MetricsService,
+  ) {
     this.createTransporter();
   }
 
@@ -41,14 +45,18 @@ export class EmailSender implements AbstractEmailSender {
         to,
         ...template,
       });
+
+      this.metricsService.recordEmailSent('success');
     } catch (error: unknown) {
       this.logger.error(`Failed to send email to ${to}`, error);
 
       const smtpError = error as SmtpError;
       if (smtpError.code === 'EENVELOPE' || smtpError.message?.includes('Invalid recipient')) {
+        this.metricsService.recordEmailSent('invalid_email');
         throw new BadRequestException('Invalid email address');
       }
 
+      this.metricsService.recordEmailSent('server_error');
       throw error;
     }
   }
