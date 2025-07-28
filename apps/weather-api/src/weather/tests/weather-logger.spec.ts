@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Logger } from '@nestjs/common';
+import { Logger } from '@shared/infrastructure/logger';
 import { WeatherLogger } from '../infrastructure/weather-logger';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -80,7 +80,7 @@ describe('WeatherLogger', () => {
 
       expect(loggerSpy).toHaveBeenCalledWith(
         'Failed to write to weather log file',
-        expect.any(String),
+        expect.any(Error),
       );
     });
   });
