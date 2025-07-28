@@ -8,8 +8,7 @@ import { WeatherUrlBuilderService } from './weather-providers/weather-url-builde
 import { WeatherApiProvider } from './weather-providers/weather-api.provider';
 import { OpenWeatherMapProvider } from './weather-providers/openweathermap.provider';
 import { CachedWeatherService } from './cached-weather.service';
-import { CacheModule } from '../../../../../shared/src/infrastructure/cache/cache.module';
-import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
+import { CacheModule } from '@shared/infrastructure/cache/cache.module';
 import { WeatherProvider } from '@weather/domain-services/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { WeatherFacade } from '../facade/weather.facade';
@@ -30,7 +29,6 @@ import { WeatherFacade } from '../facade/weather.facade';
     WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
-    MetricsService,
     {
       provide: 'OPENWEATHER_API_KEY',
       useFactory: (configService: ConfigService) =>
