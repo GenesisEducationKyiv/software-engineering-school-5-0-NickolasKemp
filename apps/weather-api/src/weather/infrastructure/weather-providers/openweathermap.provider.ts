@@ -6,7 +6,7 @@ import { OpenWeatherMapResponse } from './weather-providers.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { Logger } from '@shared/infrastructure/logger';
-import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
+import { AbstractWeatherMetrics } from '../../metrics/domain/weather-metrics.interface';
 
 @Injectable()
 export class OpenWeatherMapProvider implements WeatherProvider {
@@ -18,7 +18,7 @@ export class OpenWeatherMapProvider implements WeatherProvider {
     @Inject('OPENWEATHER_API_KEY') private readonly apiKey: string,
     private readonly weatherUrlBuilderService: WeatherUrlBuilderService,
     private readonly weatherLogger: WeatherLogger,
-    private readonly metricsService: MetricsService,
+    @Inject(AbstractWeatherMetrics) private readonly weatherMetrics: AbstractWeatherMetrics,
   ) {}
 
   async fetchWeatherData(city: string): Promise<WeatherData> {
@@ -35,7 +35,7 @@ export class OpenWeatherMapProvider implements WeatherProvider {
 
       const response = await axios.get<OpenWeatherMapResponse>(url);
       this.weatherLogger.logProviderResponse(this.name, city, response.data);
-      this.metricsService.recordWeatherProviderCall('openweathermap', 'success');
+      this.weatherMetrics.recordWeatherProviderCall('openweathermap', 'success');
 
       return {
         temperature: response.data.main.temp,
@@ -45,7 +45,7 @@ export class OpenWeatherMapProvider implements WeatherProvider {
     } catch (error) {
       this.weatherLogger.logProviderResponse(this.name, city, error as Error, true);
       this.logger.error(`Failed to fetch weather data for city: ${city}`, error);
-      this.metricsService.recordWeatherProviderCall('openweathermap', 'error');
+      this.weatherMetrics.recordWeatherProviderCall('openweathermap', 'error');
       throw error;
     }
   }

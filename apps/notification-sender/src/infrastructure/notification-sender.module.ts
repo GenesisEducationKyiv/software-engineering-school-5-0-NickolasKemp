@@ -8,6 +8,8 @@ import { EmailModule } from './email/email.module';
 import { SUBSCRIPTION_EVENT_GROUP } from '@shared/event-bus/domain-services/subscription/subscription.event';
 import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
 import { SubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription.handler';
+import { EmailMetricsService } from '../metrics/infrastructure/email-metrics.service';
+import { AbstractEmailMetrics } from '../metrics/domain/email-metrics.interface';
 
 @Module({
   imports: [
@@ -38,6 +40,15 @@ import { SubscriptionHandler } from '@notification-sender/application-services/e
     EventBusModule,
   ],
   controllers: [NotificationSenderController],
-  providers: [NotificationSenderService, SubscriptionHandler, NotificationEventSubscriber],
+  providers: [
+    NotificationSenderService,
+    SubscriptionHandler,
+    NotificationEventSubscriber,
+    EmailMetricsService,
+    {
+      provide: AbstractEmailMetrics,
+      useClass: EmailMetricsService,
+    },
+  ],
 })
 export class NotificationSenderModule {}

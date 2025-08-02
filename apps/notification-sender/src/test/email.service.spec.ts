@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailSender } from '../infrastructure/email/email-sender';
-import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
+import { AbstractEmailMetrics } from '../metrics/domain/email-metrics.interface';
 
 jest.mock('nodemailer');
 
@@ -36,7 +36,7 @@ describe('EmailSender', () => {
           },
         },
         {
-          provide: MetricsService,
+          provide: AbstractEmailMetrics,
           useValue: {
             recordEmailSent: jest.fn(),
           },

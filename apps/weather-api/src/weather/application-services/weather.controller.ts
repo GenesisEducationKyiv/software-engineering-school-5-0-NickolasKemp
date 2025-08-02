@@ -1,8 +1,15 @@
-import { Controller, Get, Query, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  BadRequestException,
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import { WeatherData } from '../domain/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { Logger } from '@shared/infrastructure/logger';
-import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
+import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-metrics.interface';
 
 @Controller('api/weather')
 export class WeatherController {
@@ -10,7 +17,7 @@ export class WeatherController {
 
   constructor(
     private readonly weatherService: AbstractWeatherService,
-    private readonly metricsService: MetricsService,
+    @Inject(AbstractHttpMetrics) private readonly httpMetrics: AbstractHttpMetrics,
   ) {}
 
   @Get()
@@ -18,7 +25,7 @@ export class WeatherController {
     const startTime = Date.now();
 
     if (!city) {
-      this.metricsService.recordHttpRequest('/api/weather', 'GET', 400);
+      this.httpMetrics.recordHttpRequest('/api/weather', 'GET', 400);
       throw new BadRequestException('City is required');
     }
 
@@ -26,14 +33,14 @@ export class WeatherController {
       const result = await this.weatherService.getWeather(city);
 
       const duration = (Date.now() - startTime) / 1000;
-      this.metricsService.recordHttpRequest('/api/weather', 'GET', 200);
-      this.metricsService.recordHttpRequestDuration('/api/weather', 'GET', duration);
+      this.httpMetrics.recordHttpRequest('/api/weather', 'GET', 200);
+      this.httpMetrics.recordHttpRequestDuration('/api/weather', 'GET', duration);
 
       return result;
     } catch (error) {
       const duration = (Date.now() - startTime) / 1000;
-      this.metricsService.recordHttpRequest('/api/weather', 'GET', 404);
-      this.metricsService.recordHttpRequestDuration('/api/weather', 'GET', duration);
+      this.httpMetrics.recordHttpRequest('/api/weather', 'GET', 404);
+      this.httpMetrics.recordHttpRequestDuration('/api/weather', 'GET', duration);
 
       this.logger.error(`Error fetching weather for city: ${city}`, error);
       throw new NotFoundException('City not found or weather service unavailable');

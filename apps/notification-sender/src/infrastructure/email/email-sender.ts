@@ -1,10 +1,10 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailTemplate } from '../../application-services/types/email.interface';
 import { Logger } from '@shared/infrastructure/logger';
 import { AbstractEmailSender } from '@notification-sender/domain-services/email-sender.interface';
-import { MetricsService } from '@shared/infrastructure/metrics/metrics.service';
+import { AbstractEmailMetrics } from '../../metrics/domain/email-metrics.interface';
 
 interface SmtpError extends Error {
   code?: string;
@@ -17,7 +17,7 @@ export class EmailSender implements AbstractEmailSender {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly metricsService: MetricsService,
+    @Inject(AbstractEmailMetrics) private readonly emailMetrics: AbstractEmailMetrics,
   ) {
     this.createTransporter();
   }
@@ -46,17 +46,17 @@ export class EmailSender implements AbstractEmailSender {
         ...template,
       });
 
-      this.metricsService.recordEmailSent('success');
+      this.emailMetrics.recordEmailSent('success');
     } catch (error: unknown) {
       this.logger.error(`Failed to send email to ${to}`, error);
 
       const smtpError = error as SmtpError;
       if (smtpError.code === 'EENVELOPE' || smtpError.message?.includes('Invalid recipient')) {
-        this.metricsService.recordEmailSent('invalid_email');
+        this.emailMetrics.recordEmailSent('invalid_email');
         throw new BadRequestException('Invalid email address');
       }
 
-      this.metricsService.recordEmailSent('server_error');
+      this.emailMetrics.recordEmailSent('server_error');
       throw error;
     }
   }

@@ -11,7 +11,9 @@ import { WeatherModule } from './weather/infrastructure/weather.module';
 import { SubscriptionModule } from './subscription/infrastructure/subscription.module';
 import { SchedulerModule } from './scheduler/infrastructure/scheduler.module';
 import { CacheModule } from '@nestjs/cache-manager';
-import { MetricsModule } from '@shared/infrastructure/metrics/metrics.module';
+import { MetricsModule } from '@shared/infrastructure/metrics/infrastructure/metrics.module';
+import { MetricsService } from '@shared/infrastructure/metrics/infrastructure/metrics.service';
+import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-metrics.interface';
 
 @Module({
   imports: [
@@ -49,6 +51,12 @@ import { MetricsModule } from '@shared/infrastructure/metrics/metrics.module';
     SchedulerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: AbstractHttpMetrics,
+      useClass: MetricsService,
+    },
+  ],
 })
 export class AppModule {}

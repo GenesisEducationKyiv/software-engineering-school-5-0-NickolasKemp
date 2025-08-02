@@ -12,6 +12,8 @@ import { CacheModule } from '@shared/infrastructure/cache/cache.module';
 import { WeatherProvider } from '@weather/domain-services/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { WeatherFacade } from '../facade/weather.facade';
+import { WeatherMetricsService } from '../metrics/infrastructure/weather-metrics.service';
+import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interface';
 
 @Module({
   imports: [ConfigModule, CacheModule],
@@ -29,6 +31,11 @@ import { WeatherFacade } from '../facade/weather.facade';
     WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
+    WeatherMetricsService,
+    {
+      provide: AbstractWeatherMetrics,
+      useClass: WeatherMetricsService,
+    },
     {
       provide: 'OPENWEATHER_API_KEY',
       useFactory: (configService: ConfigService) =>
