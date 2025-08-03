@@ -6,7 +6,7 @@ import { OpenWeatherMapResponse } from './weather-providers.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { Logger } from '@shared/infrastructure/logger';
-import { AbstractWeatherMetrics } from '../../metrics/domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../../metrics/domain-services/weather-metrics.interface';
 
 @Injectable()
 export class OpenWeatherMapProvider implements WeatherProvider {

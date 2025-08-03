@@ -5,7 +5,7 @@ import { WeatherLogger } from '../infrastructure/weather-logger';
 import { WeatherUrlBuilderService } from '../infrastructure/weather-providers/weather-url-builder.service';
 import { WeatherData } from '../domain/weather.interface';
 import { OpenWeatherMapResponse } from '@weather/infrastructure/weather-providers/weather-providers.interface';
-import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

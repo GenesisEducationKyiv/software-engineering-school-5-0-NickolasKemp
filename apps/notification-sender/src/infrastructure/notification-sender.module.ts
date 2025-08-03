@@ -9,7 +9,7 @@ import { SUBSCRIPTION_EVENT_GROUP } from '@shared/event-bus/domain-services/subs
 import { EventBusModule } from '@shared/event-bus/infrastructure/event-bus.module';
 import { SubscriptionHandler } from '@notification-sender/application-services/event-handlers/subscription.handler';
 import { EmailMetricsService } from '../metrics/infrastructure/email-metrics.service';
-import { AbstractEmailMetrics } from '../metrics/domain/email-metrics.interface';
+import { AbstractEmailMetrics } from '../metrics/domain-services/email-metrics.interface';
 
 @Module({
   imports: [

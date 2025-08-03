@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailSender } from '../infrastructure/email/email-sender';
-import { AbstractEmailMetrics } from '../metrics/domain/email-metrics.interface';
+import { AbstractEmailMetrics } from '../metrics/domain-services/email-metrics.interface';
 
 jest.mock('nodemailer');
 

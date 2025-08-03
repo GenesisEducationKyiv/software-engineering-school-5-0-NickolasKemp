@@ -4,7 +4,7 @@ import * as nodemailer from 'nodemailer';
 import { EmailTemplate } from '../../application-services/types/email.interface';
 import { Logger } from '@shared/infrastructure/logger';
 import { AbstractEmailSender } from '@notification-sender/domain-services/email-sender.interface';
-import { AbstractEmailMetrics } from '../../metrics/domain/email-metrics.interface';
+import { AbstractEmailMetrics } from '../../metrics/domain-services/email-metrics.interface';
 
 interface SmtpError extends Error {
   code?: string;

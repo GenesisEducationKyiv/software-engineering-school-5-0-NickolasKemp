@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Counter } from 'prom-client';
-import { AbstractWeatherMetrics } from '../domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../domain-services/weather-metrics.interface';
 
 @Injectable()
 export class WeatherMetricsService implements AbstractWeatherMetrics {

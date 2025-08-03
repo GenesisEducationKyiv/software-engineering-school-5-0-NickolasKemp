@@ -4,7 +4,7 @@ import { WeatherData } from '../domain/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { WeatherService } from '../domain-services/weather.service';
 import { CacheService } from '@shared/infrastructure/cache/cache.service';
-import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 
 @Injectable()
 export class CachedWeatherService implements AbstractWeatherService {

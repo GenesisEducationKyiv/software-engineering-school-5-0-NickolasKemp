@@ -13,7 +13,7 @@ import { WeatherProvider } from '@weather/domain-services/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { WeatherFacade } from '../facade/weather.facade';
 import { WeatherMetricsService } from '../metrics/infrastructure/weather-metrics.service';
-import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 
 @Module({
   imports: [ConfigModule, CacheModule],

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Counter } from 'prom-client';
-import { AbstractEmailMetrics } from '../domain/email-metrics.interface';
+import { AbstractEmailMetrics } from '../domain-services/email-metrics.interface';
 
 @Injectable()
 export class EmailMetricsService implements AbstractEmailMetrics {

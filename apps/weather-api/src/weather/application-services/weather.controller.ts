@@ -9,7 +9,7 @@ import {
 import { WeatherData } from '../domain/weather.interface';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
 import { Logger } from '@shared/infrastructure/logger';
-import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-metrics.interface';
+import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain-services/http-metrics.interface';
 
 @Controller('api/weather')
 export class WeatherController {

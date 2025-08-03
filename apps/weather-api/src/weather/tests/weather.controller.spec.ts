@@ -3,7 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherController } from '../application-services/weather.controller';
 import { AbstractWeatherService } from '@weather/domain-services/weather.interface';
-import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-metrics.interface';
+import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain-services/http-metrics.interface';
 
 describe('WeatherController', () => {
   let weatherController: WeatherController;

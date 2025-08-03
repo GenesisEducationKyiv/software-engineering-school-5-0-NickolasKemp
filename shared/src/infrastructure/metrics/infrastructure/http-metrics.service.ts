@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Counter, Histogram } from 'prom-client';
-import { AbstractHttpMetrics } from '../domain/http-metrics.interface';
+import { AbstractHttpMetrics } from '../domain-services/http-metrics.interface';
 
 @Injectable()
 export class HttpMetricsService implements AbstractHttpMetrics {

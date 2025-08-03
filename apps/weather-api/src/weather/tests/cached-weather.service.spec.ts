@@ -1,7 +1,7 @@
 import { CachedWeatherService } from '../infrastructure/cached-weather.service';
 import { CacheService } from '../../../../../shared/src/infrastructure/cache/cache.service';
 import { WeatherService } from '../domain-services/weather.service';
-import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interface';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 import { WeatherData } from '../domain/weather.interface';
 
 describe('CachedWeatherService', () => {
