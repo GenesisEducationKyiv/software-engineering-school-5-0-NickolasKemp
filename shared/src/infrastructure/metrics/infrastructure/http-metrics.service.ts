@@ -3,7 +3,7 @@ import { Counter, Histogram } from 'prom-client';
 import { AbstractHttpMetrics } from '../domain/http-metrics.interface';
 
 @Injectable()
-export class MetricsService extends AbstractHttpMetrics {
+export class HttpMetricsService implements AbstractHttpMetrics {
   private readonly httpRequestsCounter = new Counter({
     name: 'http_requests_total',
     help: 'Total number of HTTP requests',

@@ -31,7 +31,6 @@ import { AbstractWeatherMetrics } from '../metrics/domain/weather-metrics.interf
     WeatherUrlBuilderService,
     WeatherApiProvider,
     OpenWeatherMapProvider,
-    WeatherMetricsService,
     {
       provide: AbstractWeatherMetrics,
       useClass: WeatherMetricsService,

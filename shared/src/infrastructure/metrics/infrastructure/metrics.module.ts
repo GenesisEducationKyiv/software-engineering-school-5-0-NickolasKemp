@@ -1,11 +1,17 @@
 import { Module, Global } from '@nestjs/common';
-import { MetricsService } from './metrics.service';
+import { HttpMetricsService } from './http-metrics.service';
+import { AbstractHttpMetrics } from '../domain/http-metrics.interface';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Global()
 @Module({
   imports: [PrometheusModule.register()],
-  providers: [MetricsService],
-  exports: [MetricsService],
+  providers: [
+    {
+      provide: AbstractHttpMetrics,
+      useClass: HttpMetricsService,
+    },
+  ],
+  exports: [AbstractHttpMetrics],
 })
 export class MetricsModule {}

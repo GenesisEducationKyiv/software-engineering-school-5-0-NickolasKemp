@@ -12,8 +12,6 @@ import { SubscriptionModule } from './subscription/infrastructure/subscription.m
 import { SchedulerModule } from './scheduler/infrastructure/scheduler.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { MetricsModule } from '@shared/infrastructure/metrics/infrastructure/metrics.module';
-import { MetricsService } from '@shared/infrastructure/metrics/infrastructure/metrics.service';
-import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-metrics.interface';
 
 @Module({
   imports: [
@@ -51,12 +49,6 @@ import { AbstractHttpMetrics } from '@shared/infrastructure/metrics/domain/http-
     SchedulerModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: AbstractHttpMetrics,
-      useClass: MetricsService,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
