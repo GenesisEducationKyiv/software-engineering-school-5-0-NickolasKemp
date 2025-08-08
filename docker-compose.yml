@@ -1,13 +1,47 @@
-version: '3.8'
-
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weather-api
+    labels:
+      logging: 'promtail'
+      logging_jobname: 'weather-api'
     ports:
       - '3000:3000'
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/weather_service?schema=public
       - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - APP_URL=http://localhost:3000
+      - GRAFANA_URL=http://grafana:3000
+      - LOKI_URL=http://loki:3100
+      - PROMTAIL_URL=http://promtail:3100
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+  notification-sender:
+    build:
+      context: .
+      dockerfile: apps/notification-sender/Dockerfile
+    container_name: notification-sender
+    labels:
+      logging: 'promtail'
+      logging_jobname: 'notification-sender'
+    ports:
+      - '3002:3001'
+    environment:
+      - PORT=3002
+      - DATABASE_URL=postgresql://user:password@postgres:5432/weather_service?schema=public
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}
@@ -21,6 +55,7 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
+    command: yarn start:notification-sender
 
   postgres:
     image: postgres:latest
@@ -40,6 +75,42 @@ services:
     volumes:
       - redis-data:/data
 
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3001:3000'
+    depends_on:
+      - loki
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki-data:/loki
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - ./logs:/app/logs
+      - ./promtail-config.yml:/etc/promtail/config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yaml
+    depends_on:
+      - loki
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
 volumes:
   postgres-data:
-  redis-data: 
+  redis-data:
+  grafana-storage:
+  loki-data:

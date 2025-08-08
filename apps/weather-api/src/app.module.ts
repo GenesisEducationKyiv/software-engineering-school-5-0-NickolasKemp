@@ -11,7 +11,7 @@ import { WeatherModule } from './weather/infrastructure/weather.module';
 import { SubscriptionModule } from './subscription/infrastructure/subscription.module';
 import { SchedulerModule } from './scheduler/infrastructure/scheduler.module';
 import { CacheModule } from '@nestjs/cache-manager';
-import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { MetricsModule } from '@shared/infrastructure/metrics/infrastructure/metrics.module';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     CacheModule.register({
       isGlobal: true,
     }),
-    PrometheusModule.register(),
+    MetricsModule,
     ScheduleModule.forRoot(),
     BullModule.forRootAsync({
       inject: [ConfigService],

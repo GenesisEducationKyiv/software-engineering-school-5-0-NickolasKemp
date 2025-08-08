@@ -5,6 +5,7 @@ import { WeatherLogger } from '../infrastructure/weather-logger';
 import { WeatherUrlBuilderService } from '../infrastructure/weather-providers/weather-url-builder.service';
 import { WeatherData } from '../domain/weather.interface';
 import { WeatherApiResponse } from '@weather/infrastructure/weather-providers/weather-providers.interface';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -37,6 +38,14 @@ describe('WeatherApiProvider', () => {
         {
           provide: WeatherLogger,
           useValue: mockWeatherLogger,
+        },
+        {
+          provide: AbstractWeatherMetrics,
+          useValue: {
+            recordWeatherProviderCall: jest.fn(),
+            recordCacheHit: jest.fn(),
+            recordCacheMiss: jest.fn(),
+          },
         },
       ],
     }).compile();

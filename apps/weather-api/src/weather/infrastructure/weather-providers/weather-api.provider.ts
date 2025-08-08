@@ -6,6 +6,7 @@ import { WeatherApiResponse } from './weather-providers.interface';
 import { WeatherLogger } from '../weather-logger';
 import { WeatherUrlBuilderService } from './weather-url-builder.service';
 import { Logger } from '@shared/infrastructure/logger';
+import { AbstractWeatherMetrics } from '../../metrics/domain-services/weather-metrics.interface';
 
 @Injectable()
 export class WeatherApiProvider implements WeatherProvider {
@@ -17,6 +18,7 @@ export class WeatherApiProvider implements WeatherProvider {
     @Inject('WEATHER_API_KEY') private readonly apiKey: string,
     private readonly weatherUrlBuilderService: WeatherUrlBuilderService,
     private readonly weatherLogger: WeatherLogger,
+    @Inject(AbstractWeatherMetrics) private readonly weatherMetrics: AbstractWeatherMetrics,
   ) {}
 
   async fetchWeatherData(city: string): Promise<WeatherData> {
@@ -32,6 +34,8 @@ export class WeatherApiProvider implements WeatherProvider {
 
       const response = await axios.get<WeatherApiResponse>(url);
       this.weatherLogger.logProviderResponse(this.name, city, response.data);
+      this.weatherMetrics.recordWeatherProviderCall('weatherapi', 'success');
+
       return {
         temperature: response.data.current.temp_c,
         humidity: response.data.current.humidity,
@@ -40,6 +44,7 @@ export class WeatherApiProvider implements WeatherProvider {
     } catch (error) {
       this.weatherLogger.logProviderResponse(this.name, city, error as Error, true);
       this.logger.error(`Failed to fetch weather data for city: ${city}`, error);
+      this.weatherMetrics.recordWeatherProviderCall('weatherapi', 'error');
       throw error;
     }
   }

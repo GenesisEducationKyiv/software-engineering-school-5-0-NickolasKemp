@@ -1,14 +1,14 @@
 import { CachedWeatherService } from '../infrastructure/cached-weather.service';
 import { CacheService } from '../../../../../shared/src/infrastructure/cache/cache.service';
 import { WeatherService } from '../domain-services/weather.service';
-import { MetricsService } from '../../../../../shared/src/infrastructure/metrics/metrics.service';
+import { AbstractWeatherMetrics } from '../metrics/domain-services/weather-metrics.interface';
 import { WeatherData } from '../domain/weather.interface';
 
 describe('CachedWeatherService', () => {
   let cachedWeatherService: CachedWeatherService;
   let mockCacheService: jest.Mocked<CacheService>;
   let mockWeatherService: jest.Mocked<WeatherService>;
-  let mockMetricsService: jest.Mocked<MetricsService>;
+  let mockWeatherMetrics: jest.Mocked<AbstractWeatherMetrics>;
 
   const city = 'London';
   const cacheKey = `weather:${city.toLowerCase()}`;
@@ -26,14 +26,15 @@ describe('CachedWeatherService', () => {
     mockWeatherService = {
       getWeather: jest.fn(),
     } as unknown as jest.Mocked<WeatherService>;
-    mockMetricsService = {
-      incHit: jest.fn(),
-      incMiss: jest.fn(),
-    } as unknown as jest.Mocked<MetricsService>;
+    mockWeatherMetrics = {
+      recordCacheHit: jest.fn(),
+      recordCacheMiss: jest.fn(),
+      recordWeatherProviderCall: jest.fn(),
+    } as unknown as jest.Mocked<AbstractWeatherMetrics>;
     cachedWeatherService = new CachedWeatherService(
       mockWeatherService,
       mockCacheService,
-      mockMetricsService,
+      mockWeatherMetrics,
     );
   });
 
@@ -42,8 +43,8 @@ describe('CachedWeatherService', () => {
     const result = await cachedWeatherService.getWeather(city);
     expect(result).toEqual(weatherData);
     expect(mockCacheService.get).toHaveBeenCalledWith(cacheKey);
-    expect(mockMetricsService.incHit).toHaveBeenCalled();
-    expect(mockMetricsService.incMiss).not.toHaveBeenCalled();
+    expect(mockWeatherMetrics.recordCacheHit).toHaveBeenCalled();
+    expect(mockWeatherMetrics.recordCacheMiss).not.toHaveBeenCalled();
     expect(mockWeatherService.getWeather).not.toHaveBeenCalled();
   });
 
@@ -53,8 +54,8 @@ describe('CachedWeatherService', () => {
     const result = await cachedWeatherService.getWeather(city);
     expect(result).toEqual(weatherData);
     expect(mockCacheService.get).toHaveBeenCalledWith(cacheKey);
-    expect(mockMetricsService.incMiss).toHaveBeenCalled();
-    expect(mockMetricsService.incHit).not.toHaveBeenCalled();
+    expect(mockWeatherMetrics.recordCacheMiss).toHaveBeenCalled();
+    expect(mockWeatherMetrics.recordCacheHit).not.toHaveBeenCalled();
     expect(mockWeatherService.getWeather).toHaveBeenCalledWith(city);
     expect(mockCacheService.set).toHaveBeenCalledWith(cacheKey, weatherData, 300);
   });

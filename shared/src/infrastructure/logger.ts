@@ -1,10 +1,18 @@
-import { LoggerService, Logger as NestLogger } from '@nestjs/common';
+import { ConsoleLogger, LoggerService } from '@nestjs/common';
 
 export class Logger implements LoggerService {
-  private readonly baseLogger: NestLogger;
+  private readonly baseLogger: ConsoleLogger;
 
   constructor(private readonly context: string) {
-    this.baseLogger = new NestLogger(context);
+    this.baseLogger = new ConsoleLogger({
+      json: true,
+      colors: true,
+      context: this.context,
+    });
+  }
+
+  debug(message: string, context: string) {
+    this.baseLogger.debug(message, context);
   }
 
   log(message: string) {
