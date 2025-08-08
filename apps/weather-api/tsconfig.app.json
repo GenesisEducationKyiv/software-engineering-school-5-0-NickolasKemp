@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/weather-api",
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["src/*"],
+      "@/*": ["src/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@domain/*": ["src/domain/*"],
+      "@weather/*": ["src/weather/*"],
+      "@subscription/*": ["src/subscription/*"],
+      "@shared/*": ["../../shared/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
