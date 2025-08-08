@@ -1,4 +1,4 @@
-import { WeatherData } from '../domain/weather.interface';
+import { WeatherData } from './weather.interface';
 
 export interface WeatherUpdateEmailData {
   city: string;

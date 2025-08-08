@@ -7,10 +7,10 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { WeatherModule } from './weather/weather.module';
-import { EmailModule } from './email/email.module';
-import { SubscriptionModule } from './subscription/subscription.module';
-import { TasksModule } from './tasks/tasks.module';
+import { WeatherModule } from './weather/infrastructure/weather.module';
+import { EmailModule } from './infrastructure/email-sender/email.module';
+import { SubscriptionModule } from './subscription/infrastructure/subscription.module';
+import { TasksModule } from './tasks/infrastructure/tasks.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
